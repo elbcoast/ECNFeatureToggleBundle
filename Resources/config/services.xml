@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="ecn_featuretoggle.class">Ecn\FeatureToggleBundle\Service\FeatureService</parameter>
+        <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
+    </parameters>
+
+    <services>
+
+        <!-- FeatureService -->
+        <service id="ecn_featuretoggle" class="%ecn_featuretoggle.class%">
+            <argument>%toggle.features%</argument>
+        </service>
+        <service id="feature" alias="ecn_featuretoggle"/>
+
+        <!-- Twig extension for feature toggle -->
+        <service id="ecn_featuretoggle.twig" class="%ecn_featuretoggle.twig.class%">
+            <argument type="service" id="ecn_featuretoggle"/>
+            <tag name="twig.extension" />
+        </service>
+
+    </services>
+
+</container>
