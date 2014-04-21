@@ -25,7 +25,10 @@ class Configuration implements ConfigurationInterface
         ->arrayNode('features')->useAttributeAsKey('name')
           ->prototype('array')
             ->children()
-                ->scalarNode('voter')->end()
+
+                      ->scalarNode('voter')->defaultValue('AlwaysTrueVoter')->end()
+                      ->variableNode('params')->defaultValue(array())->end()
+
             ->end()
           ->end()
         ->end()
