@@ -13,7 +13,7 @@
 
         <!-- FeatureService -->
         <service id="ecn_featuretoggle" class="%ecn_featuretoggle.class%">
-            <argument>%toggle.features%</argument>
+            <argument>%features%</argument>
         </service>
         <service id="feature" alias="ecn_featuretoggle"/>
 
