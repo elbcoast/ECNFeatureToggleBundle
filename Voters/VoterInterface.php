@@ -14,8 +14,20 @@ namespace Ecn\FeatureToggleBundle\Voters;
  */
 Interface VoterInterface
 {
+  /**
+   * Add additional parameters from the feature definition
+   *
+   * @param array $params
+   *
+   * @return mixed
+   */
   public function setParams(array $params);
 
+  /**
+   * Check if conditions for a feature are matched
+   *
+   * @return bool
+   */
   public function pass();
 
 }

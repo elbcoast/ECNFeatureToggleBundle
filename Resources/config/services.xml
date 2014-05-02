@@ -7,6 +7,7 @@
     <parameters>
         <parameter key="ecn_featuretoggle.class">Ecn\FeatureToggleBundle\Service\FeatureService</parameter>
         <parameter key="ecn_featuretoggle.voter_registry.class">Ecn\FeatureToggleBundle\Voters\VoterRegistry</parameter>
+        <parameter key="ecn_featuretoggle.voter_alwaystrue.class">Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter</parameter>
         <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
     </parameters>
 
@@ -15,11 +16,17 @@
         <!-- FeatureService -->
         <service id="ecn_featuretoggle" class="%ecn_featuretoggle.class%">
             <argument>%features%</argument>
+            <argument type="service" id="ecn_featuretoggle.voter_registry"/>
         </service>
         <service id="feature" alias="ecn_featuretoggle"/>
 
         <!-- Voter Registry -->
         <service id="ecn_featuretoggle.voter_registry" class="%ecn_featuretoggle.voter_registry.class%">
+        </service>
+
+        <!-- AlwaysTrue Voter -->
+        <service id="ecn_featuretoggle.voter_alwaystrue" class="%ecn_featuretoggle.voter_alwaystrue.class%">
+            <tag name="ecn_featuretoggle.voter" alias="AlwaysTrueVoter" />
         </service>
 
         <!-- Twig extension for feature toggle -->

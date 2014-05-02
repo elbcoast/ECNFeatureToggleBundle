@@ -2,6 +2,8 @@
 
 namespace Ecn\FeatureToggleBundle\Service;
 
+use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
+
 /**
  * Class FeatureService
  *
@@ -21,15 +23,22 @@ class FeatureService
    */
   protected $features;
 
+  /**
+   * @var VoterRegistry
+   */
+  protected $voterRegistry;
+
 
   /**
    * Constructor.
    *
-   * @param $features
+   * @param                                               $features
+   * @param \Ecn\FeatureToggleBundle\Voters\VoterRegistry $voterRegistry
    */
-  public function __construct($features)
+  public function __construct($features, VoterRegistry $voterRegistry)
   {
     $this->features = $features;
+    $this->voterRegistry = $voterRegistry;
   }
 
 
@@ -42,7 +51,16 @@ class FeatureService
    */
   public function has($value)
   {
-    return array_key_exists($value, $this->features);
+    if (!array_key_exists($value, $this->features)) {
+      return false;
+    }
+
+    $feature = $this->features[$value];
+
+    $voter = $this->voterRegistry->getVoter($feature['voter']);
+    $voter->setParams($feature['params']);
+
+    return $voter->pass();
   }
 
 }
