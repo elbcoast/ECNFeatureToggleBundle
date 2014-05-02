@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="ecn_featuretoggle.class">Ecn\FeatureToggleBundle\Service\FeatureService</parameter>
+        <parameter key="ecn_featuretoggle.voter_registry.class">Ecn\FeatureToggleBundle\Voters\VoterRegistry</parameter>
         <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
     </parameters>
 
@@ -16,6 +17,10 @@
             <argument>%features%</argument>
         </service>
         <service id="feature" alias="ecn_featuretoggle"/>
+
+        <!-- Voter Registry -->
+        <service id="ecn_featuretoggle.voter_registry" class="%ecn_featuretoggle.voter_registry.class%">
+        </service>
 
         <!-- Twig extension for feature toggle -->
         <service id="ecn_featuretoggle.twig" class="%ecn_featuretoggle.twig.class%">

@@ -3,6 +3,9 @@
 namespace Ecn\FeatureToggleBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use Ecn\FeatureToggleBundle\DependencyInjection\Compiler\VoterCompilerPass;
 
 /**
  * Class EcnFeatureToggleBundle
@@ -15,4 +18,10 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class EcnFeatureToggleBundle extends Bundle
 {
+  public function build(ContainerBuilder $container)
+  {
+    parent::build($container);
+
+    $container->addCompilerPass(new VoterCompilerPass());
+  }
 }
