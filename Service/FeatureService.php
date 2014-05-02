@@ -42,7 +42,6 @@ class FeatureService
    */
   public function has($value)
   {
-    var_dump($this->features); die;
     return array_key_exists($value, $this->features);
   }
 
