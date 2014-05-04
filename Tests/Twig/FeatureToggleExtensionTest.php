@@ -48,4 +48,19 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
 
   }
 
+
+  public function testIfExtensionHasProperName()
+  {
+    // Create service stub
+    $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // Create extension
+    $extension = new FeatureToggleExtension($service);
+
+    $this->assertEquals('featuretoggle_extension', $extension->getName());
+
+  }
+
 }

@@ -4,6 +4,7 @@ namespace Ecn\FeatureToggleBundle\Tests\Configuration;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ecn\FeatureToggleBundle\DependencyInjection\EcnFeatureToggleExtension;
+use Ecn\FeatureToggleBundle\EcnFeatureToggleBundle;
 
 class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
 {
@@ -39,6 +40,10 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
   private function createConfiguration($config = array())
   {
     $this->configuration = new ContainerBuilder();
+
+    $bundle = new EcnFeatureToggleBundle();
+    $bundle->build($this->configuration);
+
     $loader = new EcnFeatureToggleExtension();
     $loader->load(array($config), $this->configuration);
     $this->assertTrue($this->configuration instanceof ContainerBuilder);
