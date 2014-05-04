@@ -25,4 +25,20 @@ class VoterRegistryTest extends \PHPUnit_Framework_TestCase
 
   }
 
+
+  /**
+   * @expectedException \Ecn\FeatureToggleBundle\Exception\VoterNotFoundException
+   */
+  public function testUnknownVoterException()
+  {
+    // Mock a voter
+    $voterOne = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+
+    // Fill up registry
+    $registry = new VoterRegistry();
+    $registry->addVoter($voterOne, 'myFirstTestVoter');
+
+    $unknownVoter = $registry->getVoter('unknownVoter');
+  }
+
 }

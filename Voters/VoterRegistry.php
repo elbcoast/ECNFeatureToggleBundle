@@ -3,6 +3,7 @@
 namespace Ecn\FeatureToggleBundle\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
+use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 
 /**
  * Class VoterRegistry
@@ -46,6 +47,8 @@ Class VoterRegistry
    *
    * @param $alias
    *
+   * @throws \Ecn\FeatureToggleBundle\Exception\VoterNotFoundException
+   *
    * @return VoterInterface|null
    */
   public function getVoter($alias)
@@ -54,7 +57,7 @@ Class VoterRegistry
       return $this->voters[$alias];
     }
 
-    return null;
+    throw new VoterNotFoundException();
   }
 
 }
