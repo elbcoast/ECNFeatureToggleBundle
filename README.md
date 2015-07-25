@@ -10,19 +10,8 @@ This bundle adds feature toggle functionality to your Symfony 2 project.
 
 ### Step 1: Install via composer
 
-Add the EcnFeatureToggleBundle to your `composer.json`:
-
-```js
-"require": {
-    // ...
-    "ecn/featuretoggle-bundle": "dev-master"
-},
-```
-
-After that use composer to install the new bundle:
-
 ```bash
-$ php composer.phar update
+$ composer require ecn/featuretoggle-bundle:dev-master
 ```
 
 ### Step 2: Activate the bundle
