@@ -1,6 +1,8 @@
 <?php
 
 namespace Ecn\FeatureToggleBundle\Voters;
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 
 /**
  * Interface VoterInterface
@@ -17,11 +19,11 @@ Interface VoterInterface
   /**
    * Add additional parameters from the feature definition
    *
-   * @param array $params
+   * @param ParameterBag $params
    *
    * @return mixed
    */
-  public function setParams(array $params);
+  public function setParams(ParameterBag $params);
 
   /**
    * Check if conditions for a feature are matched

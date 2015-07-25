@@ -1,6 +1,8 @@
 <?php
 
 namespace Ecn\FeatureToggleBundle\Voters;
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 
 /**
  * AlwaysTrueVoter
@@ -15,7 +17,7 @@ namespace Ecn\FeatureToggleBundle\Voters;
 class AlwaysTrueVoter implements VoterInterface
 {
 
-  public function setParams(array $params)
+  public function setParams(ParameterBag $params)
   {
   }
 

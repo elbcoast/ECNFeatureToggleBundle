@@ -84,3 +84,54 @@ if ($this->get('feature')->has('MyNewFeature') {
     // Your new feature here
 }
 ```
+
+## Voters
+
+In order to decide if a feature is available or not, voters are being used. Currently there are two voters included.
+
+### AlwaysTrueVoter
+
+This is the default voter and it will always pass. So if you have a feature defined, it will always be displayed.
+
+The full configuration for using this voter looks like this:
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        MyNewFeature:
+            voter: AlwaysTrueVoter
+```
+
+Because this is the default voter, the voter part in the configuration can be omitted.
+
+### RatioVoter
+
+This voter passes on a given ratio between 0 and 1, which makes it suitable for A/B testing. The default ratio is 0.5.
+
+The higher the ratio, the more likely the voter will pass. A value of 1 will make it pass every time, 0 will make it
+never pass.
+
+If you want to use this voter, this is the full configuration:
+
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        MyNewFeature:
+            voter: RatioVoter
+            params: { ratio: 0.5 }
+```
+
+## Adding your own voters
+
+Adding voters is straight forward. First make sure, that your voter implements ``\Ecn\FeatureToggleBundle\Voters\VoterInterface``.
+
+Then define your voter as service, tag it as ``ecn_featuretoggle.voter`` and give it an alias:
+
+
+``` xml
+<!-- Example Voter -->
+<service id="ecn_featuretoggle.voter_example" class="My\Example\Voter">
+    <tag name="ecn_featuretoggle.voter" alias="ExampleVoter" />
+</service>
+```

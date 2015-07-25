@@ -8,6 +8,7 @@
         <parameter key="ecn_featuretoggle.class">Ecn\FeatureToggleBundle\Service\FeatureService</parameter>
         <parameter key="ecn_featuretoggle.voter_registry.class">Ecn\FeatureToggleBundle\Voters\VoterRegistry</parameter>
         <parameter key="ecn_featuretoggle.voter_alwaystrue.class">Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter</parameter>
+        <parameter key="ecn_featuretoggle.voter_ratio.class">Ecn\FeatureToggleBundle\Voters\RatioVoter</parameter>
         <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
     </parameters>
 
@@ -27,6 +28,11 @@
         <!-- AlwaysTrue Voter -->
         <service id="ecn_featuretoggle.voter_alwaystrue" class="%ecn_featuretoggle.voter_alwaystrue.class%">
             <tag name="ecn_featuretoggle.voter" alias="AlwaysTrueVoter" />
+        </service>
+
+        <!-- Ratio Voter -->
+        <service id="ecn_featuretoggle.voter_ratio" class="%ecn_featuretoggle.voter_ratio.class%">
+            <tag name="ecn_featuretoggle.voter" alias="RatioVoter" />
         </service>
 
         <!-- Twig extension for feature toggle -->

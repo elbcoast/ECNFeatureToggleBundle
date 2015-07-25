@@ -3,6 +3,7 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 
 class AlwaysTrueVoterTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +21,9 @@ class AlwaysTrueVoterTest extends \PHPUnit_Framework_TestCase
   {
     $voter = new AlwaysTrueVoter();
 
-    $this->assertNull($voter->setParams(array()));
+    $params = new ParameterBag(array());
+
+    $this->assertNull($voter->setParams($params));
   }
 
 
