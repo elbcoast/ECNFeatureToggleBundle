@@ -46,24 +46,41 @@ class FeatureService
     /**
      * Check if a feature is enabled
      *
-     * @param $value
+     * @param $feature
      *
      * @return bool
      */
-    public function has($value)
+    public function has($feature)
     {
-        if (!array_key_exists($value, $this->features)) {
+        if (!array_key_exists($feature, $this->features)) {
             return false;
         }
 
-        $feature = $this->features[$value];
-
-        $voter = $this->voterRegistry->getVoter($feature['voter']);
-        $params = new ParameterBag($feature['params']);
-
-        $voter->setParams($params);
+        $voter = $this->initVoter($feature);
 
         return $voter->pass();
+    }
+
+
+    /**
+     * Initializes a voter for a specific feature
+     *
+     * @param $feature
+     *
+     * @return \Ecn\FeatureToggleBundle\Voters\VoterInterface|null
+     */
+    protected function initVoter($feature)
+    {
+        $featureDefinition = $this->features[$feature];
+
+        $voter = $this->voterRegistry->getVoter($featureDefinition['voter']);
+        $params = new ParameterBag($featureDefinition['params']);
+
+        $voter->setFeature($feature);
+        $voter->setParams($params);
+
+        return $voter;
+
     }
 
 }

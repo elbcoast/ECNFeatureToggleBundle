@@ -18,7 +18,21 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class AlwaysTrueVoter implements VoterInterface
 {
 
+    /**
+     * {@inheritdoc}
+     *
+     * @param ParameterBag $params
+     */
     public function setParams(ParameterBag $params)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $feature
+     */
+    public function setFeature($feature)
     {
     }
 

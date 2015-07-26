@@ -22,9 +22,18 @@ Interface VoterInterface
      *
      * @param ParameterBag $params
      *
-     * @return mixed
+     * @return void
      */
     public function setParams(ParameterBag $params);
+
+    /**
+     * Sets the name of the feature
+     *
+     * @param string $feature
+     *
+     * @return void
+     */
+    public function setFeature($feature);
 
     /**
      * Check if conditions for a feature are matched

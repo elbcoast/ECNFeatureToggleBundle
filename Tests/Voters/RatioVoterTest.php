@@ -11,7 +11,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testVoterSetParams()
     {
-        $voter = new RatioVoter();
+        $voter = $this->getRatioVoter();
 
         $params = new ParameterBag(array('ratio' => 0.5));
 
@@ -21,7 +21,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testLowRatioVoterPass()
     {
-        $voter = new RatioVoter();
+        $voter = $this->getRatioVoter();
         $params = new ParameterBag(array('ratio' => 0.1));
         $voter->setParams($params);
 
@@ -42,7 +42,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testHighRatioVoterPass()
     {
-        $voter = new RatioVoter();
+        $voter = $this->getRatioVoter();
         $params = new ParameterBag(array('ratio' => 0.9));
         $voter->setParams($params);
 
@@ -63,7 +63,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testZeroRatioVoterPass()
     {
-        $voter = new RatioVoter();
+        $voter = $this->getRatioVoter();
         $params = new ParameterBag(array('ratio' => 0));
         $voter->setParams($params);
 
@@ -81,7 +81,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
     public function testOneRatioVoterPass()
     {
-        $voter = new RatioVoter();
+        $voter = $this->getRatioVoter();
         $params = new ParameterBag(array('ratio' => 1));
         $voter->setParams($params);
 
@@ -97,4 +97,13 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    protected function getRatioVoter()
+    {
+        // Create service stub
+        $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return new RatioVoter($session);
+    }
 }

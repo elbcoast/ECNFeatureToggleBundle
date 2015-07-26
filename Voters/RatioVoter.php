@@ -3,6 +3,7 @@
 namespace Ecn\FeatureToggleBundle\Voters;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 
 /**
@@ -25,15 +26,47 @@ class RatioVoter implements VoterInterface
     protected $ratio;
 
     /**
+     * @var string
+     */
+    protected $feature;
+
+    /**
+     * @var Session
+     */
+    protected $session;
+
+
+    /**
+     * Constructor.
+     *
+     * @param Session $session
+     */
+    public function __construct(Session $session)
+    {
+        $this->session = $session;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @param array $params
+
      * @return void
      */
     public function setParams(ParameterBag $params)
     {
         $this->ratio = $params->get('ratio', 0.5);
 
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param string $feature
+     */
+    public function setFeature($feature)
+    {
+        $this->feature = $feature;
     }
 
     /**
