@@ -1,6 +1,7 @@
 <?php
 
 namespace Ecn\FeatureToggleBundle\Voters;
+
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 

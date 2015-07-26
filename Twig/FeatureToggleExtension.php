@@ -17,48 +17,48 @@ use Ecn\FeatureToggleBundle\Service\FeatureService;
 class FeatureToggleExtension extends \Twig_Extension
 {
 
-  /**
-   * The FeatureService
-   *
-   * @var \Ecn\FeatureToggleBundle\Service\FeatureService
-   */
-  protected $featureService;
+    /**
+     * The FeatureService
+     *
+     * @var \Ecn\FeatureToggleBundle\Service\FeatureService
+     */
+    protected $featureService;
 
 
-  /**
-   * Constructor.
-   *
-   * @param FeatureService $featureService
-   */
-  public function __construct(FeatureService $featureService)
-  {
+    /**
+     * Constructor.
+     *
+     * @param FeatureService $featureService
+     */
+    public function __construct(FeatureService $featureService)
+    {
 
-    $this->featureService = $featureService;
+        $this->featureService = $featureService;
 
-  }
-
-
-  /**
-   * @return array
-   */
-  public function getFunctions()
-  {
-    // Check if a feature is activated
-    $checkFeatureFunction = new \Twig_SimpleFunction('feature', function($value) {
-      return $this->featureService->has($value);
-    });
-
-    return array($checkFeatureFunction);
-  }
+    }
 
 
-  /**
-   * Returns the name of the extension
-   *
-   * @return string
-   */
-  public function getName()
-  {
-    return 'featuretoggle_extension';
-  }
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
+        // Check if a feature is activated
+        $checkFeatureFunction = new \Twig_SimpleFunction('feature', function ($value) {
+            return $this->featureService->has($value);
+        });
+
+        return array($checkFeatureFunction);
+    }
+
+
+    /**
+     * Returns the name of the extension
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return 'featuretoggle_extension';
+    }
 }

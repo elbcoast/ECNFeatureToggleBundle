@@ -9,22 +9,22 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class AlwaysTrueVoterTest extends \PHPUnit_Framework_TestCase
 {
 
-  public function testVoterPass()
-  {
-    $voter = new AlwaysTrueVoter();
+    public function testVoterPass()
+    {
+        $voter = new AlwaysTrueVoter();
 
-    $this->assertTrue($voter->pass());
-  }
+        $this->assertTrue($voter->pass());
+    }
 
 
-  public function testVoterSetParams()
-  {
-    $voter = new AlwaysTrueVoter();
+    public function testVoterSetParams()
+    {
+        $voter = new AlwaysTrueVoter();
 
-    $params = new ParameterBag(array());
+        $params = new ParameterBag(array());
 
-    $this->assertNull($voter->setParams($params));
-  }
+        $this->assertNull($voter->setParams($params));
+    }
 
 
 }

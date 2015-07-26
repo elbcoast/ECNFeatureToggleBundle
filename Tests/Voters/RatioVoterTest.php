@@ -29,7 +29,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $hits = 0;
 
         for ($i = 1; $i <= 100; $i++) {
-            if($voter->pass()) {
+            if ($voter->pass()) {
                 $hits++;
             } else {
                 $misses++;
@@ -50,7 +50,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $hits = 0;
 
         for ($i = 1; $i <= 100; $i++) {
-            if($voter->pass()) {
+            if ($voter->pass()) {
                 $hits++;
             } else {
                 $misses++;
@@ -70,7 +70,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $hits = 0;
 
         for ($i = 1; $i <= 100; $i++) {
-            if($voter->pass()) {
+            if ($voter->pass()) {
                 $hits++;
             }
         }
@@ -88,7 +88,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $misses = 0;
 
         for ($i = 1; $i <= 100; $i++) {
-            if(!$voter->pass()) {
+            if (!$voter->pass()) {
                 $misses++;
             }
         }

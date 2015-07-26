@@ -18,10 +18,10 @@ use Ecn\FeatureToggleBundle\DependencyInjection\Compiler\VoterCompilerPass;
  */
 class EcnFeatureToggleBundle extends Bundle
 {
-  public function build(ContainerBuilder $container)
-  {
-    parent::build($container);
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
 
-    $container->addCompilerPass(new VoterCompilerPass());
-  }
+        $container->addCompilerPass(new VoterCompilerPass());
+    }
 }

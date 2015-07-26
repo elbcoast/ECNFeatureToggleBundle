@@ -14,19 +14,19 @@ use Symfony\Component\DependencyInjection\Loader;
  */
 class EcnFeatureToggleExtension extends Extension
 {
-  /**
-   * {@inheritDoc}
-   */
-  public function load(array $configs, ContainerBuilder $container)
-  {
-    $configuration = new Configuration();
-    $config = $this->processConfiguration($configuration, $configs);
+    /**
+     * {@inheritDoc}
+     */
+    public function load(array $configs, ContainerBuilder $container)
+    {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
 
-    $features = array_key_exists('features', $config) ? $config['features'] : array();
+        $features = array_key_exists('features', $config) ? $config['features'] : array();
 
-    $container->setParameter('features', $features);
+        $container->setParameter('features', $features);
 
-    $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-    $loader->load('services.xml');
-  }
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.xml');
+    }
 }

@@ -12,29 +12,29 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-  /**
-   * {@inheritDoc}
-   */
-  public function getConfigTreeBuilder()
-  {
-    $treeBuilder = new TreeBuilder();
-    $rootNode = $treeBuilder->root('ecn_feature_toggle');
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('ecn_feature_toggle');
 
-    $rootNode
-      ->children()
-        ->arrayNode('features')->useAttributeAsKey('name')
-          ->prototype('array')
+        $rootNode
             ->children()
+                ->arrayNode('features')->useAttributeAsKey('name')
+                    ->prototype('array')
+                        ->children()
 
-                      ->scalarNode('voter')->defaultValue('AlwaysTrueVoter')->end()
-                      ->variableNode('params')->defaultValue(array())->end()
+                            ->scalarNode('voter')->defaultValue('AlwaysTrueVoter')->end()
+                            ->variableNode('params')->defaultValue(array())->end()
 
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
-          ->end()
-        ->end()
-      ->end()
-    ->end();
+        ->end();
 
-    return $treeBuilder;
-  }
+        return $treeBuilder;
+    }
 }
