@@ -16,17 +16,13 @@ env:
     - SYMFONY_VERSION=2.7.*
     - SYMFONY_VERSION=dev-master
 
- matrix:
-   include:
-     - php: 5.4
-       env:
-        - COMPOSER_FLAGS="--prefer-stable --prefer-lowest"
-        - COVERAGE=true
-        - SYMFONY_VERSION=2.3.*
-        - TEST_COMMAND="composer test-ci"
+matrix:
+  include:
+    - php: 5.4
+      env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true SYMFONY_VERSION=2.3.* TEST_COMMAND="composer test-ci"
 
 install:
-  - travis_retrycomposer require --no-update symfony/framework-bundle:${SYMFONY_VERSION}
+  - travis_retry composer require --no-update symfony/framework-bundle:${SYMFONY_VERSION}
   - travis_retry composer update ${COMPOSER_FLAGS} --prefer-source --no-interaction
 
 script:
