@@ -1,19 +1,29 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Tests\Configuration;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ecn\FeatureToggleBundle\DependencyInjection\EcnFeatureToggleExtension;
 use Ecn\FeatureToggleBundle\EcnFeatureToggleBundle;
 
+/**
+ * @author Pierre Groth <pierre@elbcoast.net>
+ */
 class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var ContainerBuilder
      */
     private $configuration;
-
 
     /**
      * Test if the default configuration for a feature
@@ -31,7 +41,6 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
     /**
      * @param array $config
      *
@@ -48,7 +57,6 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
         $loader->load(array($config), $this->configuration);
         $this->assertTrue($this->configuration instanceof ContainerBuilder);
     }
-
 
     protected function tearDown()
     {

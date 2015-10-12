@@ -1,15 +1,25 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 
+/**
+ * @author Pierre Groth <pierre@elbcoast.net>
+ */
 class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public function testCallable()
     {
         // Define response map for service stub
@@ -48,7 +58,6 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
 
     }
 
-
     public function testIfExtensionHasProperName()
     {
         // Create service stub
@@ -62,5 +71,4 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('featuretoggle_extension', $extension->getName());
 
     }
-
 }

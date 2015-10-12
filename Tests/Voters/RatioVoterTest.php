@@ -1,14 +1,24 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\RatioVoter;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * @author Pierre Groth <pierre@elbcoast.net>
+ */
 class RatioVoterTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public function testVoterSetParams()
     {
         $voter = $this->getRatioVoter();
@@ -17,7 +27,6 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertNull($voter->setParams($params));
     }
-
 
     public function testLowRatioVoterPass()
     {
@@ -39,7 +48,6 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($misses > $hits);
     }
 
-
     public function testHighRatioVoterPass()
     {
         $voter = $this->getRatioVoter();
@@ -60,7 +68,6 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($misses < $hits);
     }
 
-
     public function testZeroRatioVoterPass()
     {
         $voter = $this->getRatioVoter();
@@ -78,7 +85,6 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($hits == 0);
     }
 
-
     public function testOneRatioVoterPass()
     {
         $voter = $this->getRatioVoter();
@@ -95,7 +101,6 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($misses == 0);
     }
-
 
     protected function getRatioVoter()
     {

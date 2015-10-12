@@ -1,27 +1,25 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Voters;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 /**
- * AlwaysTrueVoter
- *
- * PHP Version 5.4
- *
- * @author    Pierre Groth <pierre@elbcoast.net>
- * @copyright 2014
- * @license   MIT
- *
+ * @author Pierre Groth <pierre@elbcoast.net>
  */
 class AlwaysTrueVoter implements VoterInterface
 {
-
     /**
      * {@inheritdoc}
-     *
-     * @param ParameterBag $params
      */
     public function setParams(ParameterBag $params)
     {
@@ -29,19 +27,16 @@ class AlwaysTrueVoter implements VoterInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $feature
      */
     public function setFeature($feature)
     {
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function pass()
     {
         return true;
     }
-
 }

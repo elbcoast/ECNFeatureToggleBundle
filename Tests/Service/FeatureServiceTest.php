@@ -1,14 +1,24 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Tests\Configuration;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 
+/**
+ * @author Pierre Groth <pierre@elbcoast.net>
+ */
 class FeatureServiceTest extends \PHPUnit_Framework_TestCase
 {
-
-
     public function testIfFeatureMatches()
     {
 
@@ -35,8 +45,5 @@ class FeatureServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($service->has('testfeature'));
         $this->assertFalse($service->has('unknownfeature'));
-
-
     }
-
 }

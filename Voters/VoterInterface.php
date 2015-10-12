@@ -1,21 +1,22 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Voters;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-
 /**
- * Interface VoterInterface
- *
- * PHP Version 5.4
- *
- * @author    Pierre Groth <pierre@elbcoast.net>
- * @copyright 2014
- * @license   MIT
- *
+ * @author Pierre Groth <pierre@elbcoast.net>
  */
-Interface VoterInterface
+interface VoterInterface
 {
     /**
      * Add additional parameters from the feature definition
@@ -41,5 +42,4 @@ Interface VoterInterface
      * @return bool
      */
     public function pass();
-
 }
