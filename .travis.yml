@@ -20,6 +20,9 @@ matrix:
   include:
     - php: 5.4
       env: COMPOSER_FLAGS="--prefer-stable --prefer-lowest" COVERAGE=true SYMFONY_VERSION=2.3.* TEST_COMMAND="composer test-ci"
+  exclude:
+    - php: 5.4
+      env: SYMFONY_VERSION=dev-master
 
 install:
   - travis_retry composer require --no-update symfony/framework-bundle:${SYMFONY_VERSION}
