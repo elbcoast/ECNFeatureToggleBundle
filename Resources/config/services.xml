@@ -9,6 +9,7 @@
         <parameter key="ecn_featuretoggle.voter_registry.class">Ecn\FeatureToggleBundle\Voters\VoterRegistry</parameter>
         <parameter key="ecn_featuretoggle.voter_alwaystrue.class">Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter</parameter>
         <parameter key="ecn_featuretoggle.voter_ratio.class">Ecn\FeatureToggleBundle\Voters\RatioVoter</parameter>
+        <parameter key="ecn_featuretoggle.voter_schedule.class">Ecn\FeatureToggleBundle\Voters\ScheduleVoter</parameter>
         <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
     </parameters>
 
@@ -34,6 +35,11 @@
         <service id="ecn_featuretoggle.voter_ratio" class="%ecn_featuretoggle.voter_ratio.class%">
             <argument type="service" id="session"/>
             <tag name="ecn_featuretoggle.voter" alias="RatioVoter"/>
+        </service>
+
+        <!-- Schedule Voter -->
+        <service id="ecn_featuretoggle.voter_schedule" class="%ecn_featuretoggle.voter_schedule.class%">
+            <tag name="ecn_featuretoggle.voter" alias="ScheduleVoter"/>
         </service>
 
         <!-- Twig extension for feature toggle -->
