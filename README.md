@@ -1,6 +1,7 @@
 # ECNFeatureToggleBundle
 
 [![Build Status](https://travis-ci.org/elbcoast/ECNFeatureToggleBundle.svg?branch=master)](https://travis-ci.org/elbcoast/ECNFeatureToggleBundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/85a8ed5d-78ac-4523-bb9a-ebf03e15f1a6/mini.png)](https://insight.sensiolabs.com/projects/85a8ed5d-78ac-4523-bb9a-ebf03e15f1a6)
 
 **This bundle adds feature toggle functionality to your Symfony 2 project.**
 
