@@ -21,11 +21,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 trait VoterTrait
 {
     /**
-     * @var ParameterBag
-     */
-    private $params;
-
-    /**
      * @var string
      */
     private $feature;
@@ -35,7 +30,6 @@ trait VoterTrait
      */
     public function setParams(ParameterBag $params)
     {
-        $this->params = $params;
     }
 
     /**
