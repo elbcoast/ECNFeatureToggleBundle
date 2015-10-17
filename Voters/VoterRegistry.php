@@ -1,53 +1,48 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Voters;
 
-use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 
 /**
- * Class VoterRegistry
- *
- * PHP Version 5.4
- *
- * @author    Pierre Groth <pierre@elbcoast.net>
- * @copyright 2014
- * @license   MIT
- *
+ * @author Pierre Groth <pierre@elbcoast.net>
  */
-Class VoterRegistry
+class VoterRegistry
 {
     /**
      * @var array
      */
     private $voters;
 
-
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->voters = array();
     }
 
-
     /**
      * @param VoterInterface $voter The voter service to add
-     * @param string $alias The alias of the added voter
+     * @param string         $alias The alias of the added voter
      */
     public function addVoter(VoterInterface $voter, $alias)
     {
         $this->voters[$alias] = $voter;
     }
 
-
     /**
      * Returns a voter by its alias
      *
-     * @param $alias
+     * @param string $alias
      *
-     * @throws \Ecn\FeatureToggleBundle\Exception\VoterNotFoundException
+     * @throws VoterNotFoundException
      *
      * @return VoterInterface|null
      */
@@ -59,5 +54,4 @@ Class VoterRegistry
 
         throw new VoterNotFoundException();
     }
-
 }

@@ -1,33 +1,30 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 
 /**
- * Class FeatureToggleExtension
- *
- * PHP Version 5.4
- *
- * @author    Pierre Groth <pierre@elbcoast.net>
- * @copyright 2014
- * @license   MIT
- *
+ * @author Pierre Groth <pierre@elbcoast.net>
  */
 class FeatureToggleExtension extends \Twig_Extension
 {
-
     /**
-     * The FeatureService
-     *
-     * @var \Ecn\FeatureToggleBundle\Service\FeatureService
+     * @var FeatureService
      */
     protected $featureService;
 
 
     /**
-     * Constructor.
-     *
      * @param FeatureService $featureService
      */
     public function __construct(FeatureService $featureService)
@@ -36,7 +33,6 @@ class FeatureToggleExtension extends \Twig_Extension
         $this->featureService = $featureService;
 
     }
-
 
     /**
      * @return array
@@ -50,7 +46,6 @@ class FeatureToggleExtension extends \Twig_Extension
 
         return array($checkFeatureFunction);
     }
-
 
     /**
      * Returns the name of the extension

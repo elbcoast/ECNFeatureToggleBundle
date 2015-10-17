@@ -1,25 +1,24 @@
 <?php
 
+/*
+ * This file is part of the ECNFeatureToggle package.
+ *
+ * (c) Pierre Groth <pierre@elbcoast.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Ecn\FeatureToggleBundle\Voters;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-
 /**
- * RatioVoter
- *
- * PHP Version 5.5
- *
- * @author    Pierre Groth <pierre@elbcoast.net>
- * @copyright 2015
- * @license   MIT
- *
+ * @author Pierre Groth <pierre@elbcoast.net>
  */
 class RatioVoter implements VoterInterface
 {
-
-
     /**
      * @var float
      */
@@ -35,10 +34,7 @@ class RatioVoter implements VoterInterface
      */
     protected $session;
 
-
     /**
-     * Constructor.
-     *
      * @param Session $session
      */
     public function __construct(Session $session)
@@ -48,10 +44,6 @@ class RatioVoter implements VoterInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param array $params
-
-     * @return void
      */
     public function setParams(ParameterBag $params)
     {
@@ -61,8 +53,6 @@ class RatioVoter implements VoterInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @param string $feature
      */
     public function setFeature($feature)
     {
@@ -71,8 +61,6 @@ class RatioVoter implements VoterInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function pass()
     {
@@ -80,5 +68,4 @@ class RatioVoter implements VoterInterface
 
         return rand(0, 99) < $value ? true : false;
     }
-
 }
