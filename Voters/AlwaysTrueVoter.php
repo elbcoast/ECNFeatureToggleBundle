@@ -11,26 +11,12 @@
 
 namespace Ecn\FeatureToggleBundle\Voters;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
 class AlwaysTrueVoter implements VoterInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function setParams(ParameterBag $params)
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFeature($feature)
-    {
-    }
+    use VoterTrait;
 
     /**
      * {@inheritdoc}

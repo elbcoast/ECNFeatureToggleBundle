@@ -19,15 +19,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class RatioVoterTest extends \PHPUnit_Framework_TestCase
 {
-    public function testVoterSetParams()
-    {
-        $voter = $this->getRatioVoter();
-
-        $params = new ParameterBag(array('ratio' => 0.5));
-
-        $this->assertNull($voter->setParams($params));
-    }
-
     public function testLowRatioVoterPass()
     {
         $voter = $this->getRatioVoter();
