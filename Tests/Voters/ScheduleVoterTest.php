@@ -38,14 +38,14 @@ class ScheduleVoterTest extends \PHPUnit_Framework_TestCase
     {
         $voter = $this->getScheduleVoter((new \DateTime())->modify('-1 second')->format(\DateTime::RSS));
 
-        $this->assertFalse($voter->pass());
+        $this->assertTrue($voter->pass());
     }
 
     public function testLaterScheduleIsSet()
     {
         $voter = $this->getScheduleVoter((new \DateTime())->modify('+1 second')->format(\DateTime::RSS));
 
-        $this->assertTrue($voter->pass());
+        $this->assertFalse($voter->pass());
     }
 
     protected function getScheduleVoter($schedule)

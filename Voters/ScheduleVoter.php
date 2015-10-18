@@ -47,6 +47,6 @@ final class ScheduleVoter implements VoterInterface
             return false;
         }
 
-        return $schedule >= new \DateTime();
+        return new \DateTime() >= $schedule;
     }
 }
