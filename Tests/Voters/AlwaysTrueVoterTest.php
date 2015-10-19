@@ -25,13 +25,4 @@ class AlwaysTrueVoterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($voter->pass());
     }
-
-    public function testVoterSetParams()
-    {
-        $voter = new AlwaysTrueVoter();
-
-        $params = new ParameterBag(array());
-
-        $this->assertNull($voter->setParams($params));
-    }
 }

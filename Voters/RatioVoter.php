@@ -19,20 +19,17 @@ use Symfony\Component\HttpFoundation\Session\Session;
  */
 class RatioVoter implements VoterInterface
 {
-    /**
-     * @var float
-     */
-    protected $ratio;
-
-    /**
-     * @var string
-     */
-    protected $feature;
+    use VoterTrait;
 
     /**
      * @var Session
      */
     protected $session;
+
+    /**
+     * @var float
+     */
+    protected $ratio = 0.5;
 
     /**
      * @param Session $session
@@ -48,15 +45,6 @@ class RatioVoter implements VoterInterface
     public function setParams(ParameterBag $params)
     {
         $this->ratio = $params->get('ratio', 0.5);
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFeature($feature)
-    {
-        $this->feature = $feature;
     }
 
     /**
@@ -64,8 +52,8 @@ class RatioVoter implements VoterInterface
      */
     public function pass()
     {
-        $value = $this->ratio * 100;
+        $ratio = $this->ratio * 100;
 
-        return rand(0, 99) < $value ? true : false;
+        return rand(0, 99) < $ratio;
     }
 }
