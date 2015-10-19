@@ -21,85 +21,69 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 {
     public function testLowRatioVoterPass()
     {
-        $voter = $this->getRatioVoter();
-        $params = new ParameterBag(array('ratio' => 0.1));
-        $voter->setParams($params);
+        $voter = $this->getRatioVoter(0.1);
+        $hits = $this->executeTestIteration($voter);
 
-        $misses = 0;
-        $hits = 0;
-
-        for ($i = 1; $i <= 100; $i++) {
-            if ($voter->pass()) {
-                $hits++;
-            } else {
-                $misses++;
-            }
-        }
-
-        $this->assertTrue($misses > $hits);
+        $this->assertLessThan(100 - $hits, $hits);
     }
 
     public function testHighRatioVoterPass()
     {
-        $voter = $this->getRatioVoter();
-        $params = new ParameterBag(array('ratio' => 0.9));
-        $voter->setParams($params);
+        $voter = $this->getRatioVoter(0.9);
+        $hits = $this->executeTestIteration($voter);
 
-        $misses = 0;
-        $hits = 0;
-
-        for ($i = 1; $i <= 100; $i++) {
-            if ($voter->pass()) {
-                $hits++;
-            } else {
-                $misses++;
-            }
-        }
-
-        $this->assertTrue($misses < $hits);
+        $this->assertGreaterThan(100 - $hits, $hits);
     }
 
     public function testZeroRatioVoterPass()
     {
-        $voter = $this->getRatioVoter();
-        $params = new ParameterBag(array('ratio' => 0));
-        $voter->setParams($params);
+        $voter = $this->getRatioVoter(0);
+        $hits = $this->executeTestIteration($voter);
 
-        $hits = 0;
-
-        for ($i = 1; $i <= 100; $i++) {
-            if ($voter->pass()) {
-                $hits++;
-            }
-        }
-
-        $this->assertTrue($hits == 0);
+        $this->assertEquals(0, $hits);
     }
 
     public function testOneRatioVoterPass()
     {
-        $voter = $this->getRatioVoter();
-        $params = new ParameterBag(array('ratio' => 1));
-        $voter->setParams($params);
+        $voter = $this->getRatioVoter(1);
+        $hits = $this->executeTestIteration($voter);
 
-        $misses = 0;
+        $this->assertEquals(100, $hits);
+    }
 
-        for ($i = 1; $i <= 100; $i++) {
-            if (!$voter->pass()) {
-                $misses++;
+    /**
+     * Executes the tests n time returning the number of passes
+     *
+     * @param RatioVoter $ratioVoter
+     * @param int        $iterationCount
+     *
+     * @return int
+     */
+    private function executeTestIteration(RatioVoter $ratioVoter, $iterationCount = 100)
+    {
+        $hits = 0;
+
+        for ($i = 1; $i <= $iterationCount; $i++) {
+            if ($ratioVoter->pass()) {
+                $hits++;
             }
         }
 
-        $this->assertTrue($misses == 0);
+        return $hits;
     }
 
-    protected function getRatioVoter()
+    protected function getRatioVoter($ratio)
     {
         // Create service stub
         $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
             ->disableOriginalConstructor()
             ->getMock();
 
-        return new RatioVoter($session);
+        $voter = new RatioVoter($session);
+
+        $params = new ParameterBag(array('ratio' => $ratio));
+        $voter->setParams($params);
+
+        return $voter;
     }
 }
