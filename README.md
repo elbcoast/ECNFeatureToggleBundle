@@ -129,6 +129,22 @@ ecn_feature_toggle:
 ```
 
 
+### ScheduleVoter
+
+This voter passes on a given schedule being after now.
+
+If you want to use this voter, this is the full configuration:
+
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        MyNewFeature:
+            voter: ScheduleVoter
+            params: { schedule: 2015-10-23 }
+```
+
+
 ## Adding your own voters
 
 Adding voters is straight forward. First make sure, that your voter implements `\Ecn\FeatureToggleBundle\Voters\VoterInterface`.
