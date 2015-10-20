@@ -141,7 +141,7 @@ ecn_feature_toggle:
     features:
         MyNewFeature:
             voter: ScheduleVoter
-            params: { schedule: 2015-10-23 }
+            params: { schedule: '2015-10-23' }
 ```
 
 
