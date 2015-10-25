@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class RatioVoterTest extends \PHPUnit_Framework_TestCase
 {
+    public $stickyValues = array();
+
     public function testLowRatioVoterPass()
     {
         $voter = $this->getRatioVoter(0.1);
@@ -51,6 +53,21 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $hits);
     }
 
+    public function testStickyRatioVoterPass()
+    {
+        $voter = $this->getRatioVoter(0.5, true);
+        $initialPass = $voter->pass();
+        $this->stickyValues = array('_ecn_featuretoggle_ratiotest' => $initialPass);
+
+        if ($initialPass) {
+            $requiredHits = $this->executeTestIteration($voter) == 100;
+        } else {
+            $requiredHits = $this->executeTestIteration($voter) == 0;
+        }
+
+        $this->assertTrue($requiredHits);
+    }
+
     /**
      * Executes the tests n time returning the number of passes
      *
@@ -72,18 +89,46 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         return $hits;
     }
 
-    protected function getRatioVoter($ratio)
+    protected function getRatioVoter($ratio, $sticky = false)
     {
         // Create service stub
         $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $voter = new RatioVoter($session);
+        $session->method('get')->will($this->returnCallback(array($this, 'getStickyCallback')));
+        $session->method('has')->will($this->returnCallback(array($this, 'hasStickyCallback')));
 
-        $params = new ParameterBag(array('ratio' => $ratio));
+        $params = new ParameterBag(array('ratio' => $ratio, 'sticky' => $sticky));
+
+        $voter = new RatioVoter($session);
+        $voter->setFeature('ratiotest');
         $voter->setParams($params);
 
         return $voter;
+    }
+
+    /**
+     * Callback for session stub
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function hasStickyCallback($key)
+    {
+        return array_key_exists($key, $this->stickyValues);
+    }
+
+    /**
+     * Callback for session stub
+     *
+     * @param $key
+     *
+     * @return null
+     */
+    public function getStickyCallback($key)
+    {
+        return array_key_exists($key, $this->stickyValues) ? $this->stickyValues[$key] : null;
     }
 }

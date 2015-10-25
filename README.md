@@ -117,6 +117,9 @@ This voter passes on a given ratio between 0 and 1, which makes it suitable for 
 The higher the ratio, the more likely the voter will pass. A value of 1 will make it pass every time, 0 will make it
 never pass.
 
+Additionally, the result of the first check can be bound to the users session. This is useful if you need a feature
+to be persistent across multiple requests. To enable this, just set `sticky` to `true`. 
+
 If you want to use this voter, this is the full configuration:
 
 
@@ -125,7 +128,7 @@ ecn_feature_toggle:
     features:
         MyNewFeature:
             voter: RatioVoter
-            params: { ratio: 0.5 }
+            params: { ratio: 0.5, sticky: false }
 ```
 
 

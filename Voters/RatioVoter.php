@@ -32,6 +32,11 @@ class RatioVoter implements VoterInterface
     protected $ratio = 0.5;
 
     /**
+     * @var bool
+     */
+    protected $sticky = false;
+
+    /**
      * @param Session $session
      */
     public function __construct(Session $session)
@@ -45,6 +50,7 @@ class RatioVoter implements VoterInterface
     public function setParams(ParameterBag $params)
     {
         $this->ratio = $params->get('ratio', 0.5);
+        $this->sticky = $params->get('sticky', false);
     }
 
     /**
@@ -52,8 +58,42 @@ class RatioVoter implements VoterInterface
      */
     public function pass()
     {
+        if($this->sticky) {
+            $pass = $this->getStickyRatioPass();
+        } else {
+            $pass = $this->getRatioPass();
+        }
+
+        return $pass;
+    }
+
+    /**
+     * Check if the ratio passes
+     *
+     * @return bool
+     */
+    protected function getRatioPass()
+    {
         $ratio = $this->ratio * 100;
 
         return rand(0, 99) < $ratio;
+    }
+
+    /**
+     * Get a persisted pass value
+     *
+     * @return bool
+     */
+    protected function getStickyRatioPass()
+    {
+        $sessionKey = '_ecn_featuretoggle_'.$this->feature;
+        if ($this->session->has($sessionKey)) {
+            $pass = $this->session->get($sessionKey);
+        } else {
+            $pass = $this->getRatioPass();
+            $this->session->set($sessionKey, $pass);
+        }
+
+        return $pass;
     }
 }
