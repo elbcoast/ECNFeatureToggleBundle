@@ -29,6 +29,8 @@ matrix:
   exclude:
     - php: 5.4
       env: SYMFONY_VERSION=dev-master
+    - php: 5.4
+      env: SYMFONY_VERSION=3.0.*
 
 before_install:
   - travis_retry composer self-update
