@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Ecn\FeatureToggleBundle\Tests\Configuration;
+namespace Ecn\FeatureToggleBundle\Tests;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ecn\FeatureToggleBundle\DependencyInjection\EcnFeatureToggleExtension;
