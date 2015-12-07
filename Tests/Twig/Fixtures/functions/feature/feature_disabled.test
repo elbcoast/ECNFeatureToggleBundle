@@ -1,0 +1,9 @@
+--TEST--
+"feature" function returns false if a feature is not enabled
+--TEMPLATE--
+{% if feature('invalid_feature') %}
+feature content
+{% endif %}
+--DATA--
+return array()
+--EXPECT--

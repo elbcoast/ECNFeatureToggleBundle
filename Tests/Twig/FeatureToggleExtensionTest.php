@@ -13,7 +13,6 @@ namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension;
-use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
@@ -28,7 +27,7 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
             ['unknownfeature', false]
         ];
 
-        // Create service stub
+        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
         $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
             ->disableOriginalConstructor()
             ->getMock();
@@ -60,7 +59,8 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testIfExtensionHasProperName()
     {
-        // Create service stub
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
         $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
             ->disableOriginalConstructor()
             ->getMock();
@@ -68,7 +68,6 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
         // Create extension
         $extension = new FeatureToggleExtension($service);
 
-        $this->assertEquals('featuretoggle_extension', $extension->getName());
-
+        $this->assertEquals('feature_toggle', $extension->getName());
     }
 }

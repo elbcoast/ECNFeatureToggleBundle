@@ -1,0 +1,10 @@
+--TEST--
+"feature" function returns true if a feature is enabled
+--TEMPLATE--
+{% if feature('feature') %}
+feature content
+{% endif %}
+--DATA--
+return array()
+--EXPECT--
+feature content

@@ -23,37 +23,38 @@ class FeatureToggleExtension extends \Twig_Extension
      */
     protected $featureService;
 
-
     /**
      * @param FeatureService $featureService
      */
     public function __construct(FeatureService $featureService)
     {
-
         $this->featureService = $featureService;
-
     }
 
     /**
-     * @return array
+     * @return FeatureService
      */
+    public function getFeatureService()
+    {
+        return $this->featureService;
+    }
+
     public function getFunctions()
     {
-        // Check if a feature is activated
-        $checkFeatureFunction = new \Twig_SimpleFunction('feature', function ($value) {
-            return $this->featureService->has($value);
-        });
-
-        return array($checkFeatureFunction);
+        return [
+            new \Twig_SimpleFunction('feature', [$this->featureService, 'has']),
+        ];
     }
 
-    /**
-     * Returns the name of the extension
-     *
-     * @return string
-     */
+    public function getTokenParsers()
+    {
+        return [
+            new FeatureToggleTokenParser(),
+        ];
+    }
+
     public function getName()
     {
-        return 'featuretoggle_extension';
+        return 'feature_toggle';
     }
 }
