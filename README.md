@@ -80,6 +80,14 @@ Inside a twig template:
 {% endif %}
 ```
 
+Or using the tag:
+
+``` jinja
+{% feature MyNewFeature %}
+    <p>Here is my new feature!</p>
+{% endfeature %}
+```
+
 
 Inside an action:
 
@@ -91,7 +99,7 @@ if ($this->get('feature')->has('MyNewFeature') {
 
 ## Voters
 
-In order to decide if a feature is available or not, voters are being used. Currently there are two voters included.
+In order to decide if a feature is available or not, voters are being used. Currently there are three voters included.
 
 
 ### AlwaysTrueVoter
@@ -118,7 +126,7 @@ The higher the ratio, the more likely the voter will pass. A value of 1 will mak
 never pass.
 
 Additionally, the result of the first check can be bound to the users session. This is useful if you need a feature
-to be persistent across multiple requests. To enable this, just set `sticky` to `true`. 
+to be persistent across multiple requests. To enable this, just set `sticky` to `true`.
 
 If you want to use this voter, this is the full configuration:
 

@@ -1,0 +1,10 @@
+--TEST--
+"feature" tag shows content when the feature is present and enabled
+--TEMPLATE--
+{% feature feature %}
+feature content
+{% endfeature %}
+--DATA--
+return array()
+--EXPECT--
+feature content
