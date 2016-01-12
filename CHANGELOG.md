@@ -1,7 +1,7 @@
 # Change Log
 
 
-## UNRELEASED
+## 1.0.0 - 2016-01-12
 
 ### Added
 
@@ -9,6 +9,7 @@
 - Symfony 2.8 and 3.0 support
 - Twig tag
 - Twig Integration tests
+- Feature annotation for controllers
 
 
 ## 0.10.1 - 2015-10-20
