@@ -12,7 +12,7 @@
 ### Step 1: Install via composer
 
 ```bash
-$ composer require ecn/featuretoggle-bundle:dev-master
+$ composer require ecn/featuretoggle-bundle
 ```
 
 
@@ -92,7 +92,7 @@ Or using the tag:
 Inside an action:
 
 ``` php
-if ($this->get('feature')->has('MyNewFeature') {
+if ($this->get('feature')->has('MyNewFeature')) {
     // Your new feature here
 }
 ```
