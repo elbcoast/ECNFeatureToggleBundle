@@ -72,7 +72,7 @@ class FeatureService
         $featureDefinition = $this->features[$feature];
 
         $voter = $this->voterRegistry->getVoter($featureDefinition['voter']);
-        $params = array($featureDefinition['params']);
+        $params = array_key_exists('params', $featureDefinition) ? $featureDefinition['params'] : array();
 
         $voter->setFeature($feature);
         $voter->setParams($params);
