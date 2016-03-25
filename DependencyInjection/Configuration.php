@@ -33,11 +33,21 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+//                ->scalarNode('default_voter')->defaultValue('AlwaysTrueVoter')->end()
+                ->arrayNode('default')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+
+                        ->scalarNode('voter')->defaultValue('AlwaysTrueVoter')->end()
+                        ->variableNode('params')->defaultValue(array())->end()
+
+                    ->end()
+                ->end()
                 ->arrayNode('features')->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
 
-                            ->scalarNode('voter')->defaultValue('AlwaysTrueVoter')->end()
+                            ->scalarNode('voter')->defaultValue(null)->end()
                             ->variableNode('params')->defaultValue(array())->end()
 
                         ->end()

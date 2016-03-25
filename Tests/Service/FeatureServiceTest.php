@@ -29,21 +29,63 @@ class FeatureServiceTest extends \PHPUnit_Framework_TestCase
                 'params' => []
             ]
         ];
-
-        // Create voter stub
-        $voter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
-        $voter->expects($this->any())
-            ->method('pass')
-            ->will($this->returnValue(true));
-
-        // Create a registry with the voter stub in it
-        $registry = new VoterRegistry();
-        $registry->addVoter($voter, 'AlwaysTrueVoter');
+        $default = [
+            'voter' => null,
+            'params' => []
+        ];
 
         // Create service
-        $service = new FeatureService($features, $registry);
+        $service = new FeatureService($features, $default, $this->getRegistry());
 
         $this->assertTrue($service->has('testfeature'));
         $this->assertFalse($service->has('unknownfeature'));
+    }
+
+    public function testDefaultVoter()
+    {
+
+        // Define a feature
+        $features = [
+            'testfeature' => [
+                'voter' => null,
+                'params' => []
+            ]
+        ];
+        $default = [
+            'voter' => 'AlwaysTrueVoter',
+            'params' => []
+        ];
+
+        // Create service
+        $service = new FeatureService($features, $default, $this->getRegistry());
+
+        $this->assertTrue($service->has('testfeature'));
+        $this->assertFalse($service->has('unknownfeature'));
+    }
+
+    /**
+     * @return VoterRegistry
+     */
+    protected function getRegistry()
+    {
+
+        // Create alwaysTrueVoter stub
+        $alwaysTrueVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $alwaysTrueVoter->expects($this->any())
+            ->method('pass')
+            ->will($this->returnValue(true));
+
+        // Create alwaysFalseVoter stub
+        $alwaysFalseVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $alwaysFalseVoter->expects($this->any())
+            ->method('pass')
+            ->will($this->returnValue(false));
+
+        // Create a registry with the voter stubs in it
+        $registry = new VoterRegistry();
+        $registry->addVoter($alwaysTrueVoter, 'AlwaysTrueVoter');
+        $registry->addVoter($alwaysFalseVoter, 'AlwaysFalseVoter');
+
+        return $registry;
     }
 }

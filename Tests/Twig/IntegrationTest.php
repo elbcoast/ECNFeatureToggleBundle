@@ -33,6 +33,10 @@ class IntegrationTest extends \Twig_Test_IntegrationTestCase
                     'params' => [],
                 ],
             ],
+            [
+                'voter'  => 'AlwaysTrueVoter',
+                'params' => [],
+            ],
             $voterRegistry
         );
 

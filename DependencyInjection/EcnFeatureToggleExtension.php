@@ -34,8 +34,10 @@ class EcnFeatureToggleExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $features = array_key_exists('features', $config) ? $config['features'] : array();
+        $default = array_key_exists('default', $config) ? $config['default'] : array();
 
         $container->setParameter('features', $features);
+        $container->setParameter('default', $default);
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');

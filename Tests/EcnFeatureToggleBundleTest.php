@@ -31,14 +31,16 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
      */
     public function testDefaultSettings()
     {
-        $this->createConfiguration(array('features' => array('testfeature' => array())));
+        $this->createConfiguration(array(
+            'features' => array('testfeature' => array())
+        ));
 
         // Load feature config
         $features = $this->configuration->getParameter('features');
+        $default = $this->configuration->getParameter('default');
 
-        $this->assertEquals('AlwaysTrueVoter', $features['testfeature']['voter']);
+        $this->assertEquals(array('voter' => 'AlwaysTrueVoter', 'params' => array()), $default);
         $this->assertEquals(array(), $features['testfeature']['params']);
-
     }
 
     /**

@@ -117,6 +117,18 @@ ecn_feature_toggle:
 
 Because this is the default voter, the voter part in the configuration can be omitted.
 
+### AlwaysFalseVoter
+
+This voter will always fail. If you have a feature defined that uses this voter, it will never be displayed.
+
+The full configuration for using this voter looks like this:
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        MyNewFeature:
+            voter: AlwaysFalseVoter
+```
 
 ### RatioVoter
 
@@ -155,6 +167,16 @@ ecn_feature_toggle:
             params: { schedule: '2015-10-23' }
 ```
 
+## Overriding the default voter
+
+You can override the default voter like this:
+
+``` yaml
+ecn_feature_toggle:
+    default:        
+        voter: RatioVoter
+        params: { ratio: 0.1, sticky: true }
+```
 
 ## Adding your own voters
 

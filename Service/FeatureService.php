@@ -27,6 +27,11 @@ class FeatureService
     protected $features;
 
     /**
+     * @var string
+     */
+    protected $defaultVoter;
+
+    /**
      * @var VoterRegistry
      */
     protected $voterRegistry;
@@ -34,12 +39,14 @@ class FeatureService
 
     /**
      * @param               $features
+     * @param $defaultVoter
      * @param VoterRegistry $voterRegistry
      */
-    public function __construct($features, VoterRegistry $voterRegistry)
+    public function __construct($features, $defaultVoter, VoterRegistry $voterRegistry)
     {
         $this->features = $features;
         $this->voterRegistry = $voterRegistry;
+        $this->defaultVoter = $defaultVoter;
     }
 
     /**
@@ -71,13 +78,15 @@ class FeatureService
     {
         $featureDefinition = $this->features[$feature];
 
-        $voter = $this->voterRegistry->getVoter($featureDefinition['voter']);
-        $params = array_key_exists('params', $featureDefinition) ? $featureDefinition['params'] : array();
+        $voterName = $featureDefinition['voter'] ? $featureDefinition['voter'] : $this->defaultVoter['voter'];
+        $voter = $this->voterRegistry->getVoter($voterName);
+
+        $defaultParams = $this->defaultVoter['params'];
+        $params = $featureDefinition['params'] ? $featureDefinition['params'] : $defaultParams;
 
         $voter->setFeature($feature);
         $voter->setParams($params);
 
         return $voter;
-
     }
 }

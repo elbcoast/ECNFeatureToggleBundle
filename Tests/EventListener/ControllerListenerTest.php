@@ -48,7 +48,7 @@ class ControllerListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->listener = new ControllerListener(
             new AnnotationReader(),
-            new FeatureService([], new VoterRegistry())
+            new FeatureService([], [], new VoterRegistry())
         );
         $this->request = $this->createRequest();
 
