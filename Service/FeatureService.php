@@ -13,7 +13,6 @@ namespace Ecn\FeatureToggleBundle\Service;
 
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
@@ -73,7 +72,7 @@ class FeatureService
         $featureDefinition = $this->features[$feature];
 
         $voter = $this->voterRegistry->getVoter($featureDefinition['voter']);
-        $params = new ParameterBag($featureDefinition['params']);
+        $params = array($featureDefinition['params']);
 
         $voter->setFeature($feature);
         $voter->setParams($params);

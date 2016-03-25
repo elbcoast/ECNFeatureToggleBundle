@@ -12,7 +12,6 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\RatioVoter;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
@@ -99,7 +98,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $session->method('get')->will($this->returnCallback(array($this, 'getStickyCallback')));
         $session->method('has')->will($this->returnCallback(array($this, 'hasStickyCallback')));
 
-        $params = new ParameterBag(array('ratio' => $ratio, 'sticky' => $sticky));
+        $params = array('ratio' => $ratio, 'sticky' => $sticky);
 
         $voter = new RatioVoter($session);
         $voter->setFeature('ratiotest');

@@ -11,8 +11,6 @@
 
 namespace Ecn\FeatureToggleBundle\Voters;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * Should be used together with VoterInterface
  *
@@ -28,7 +26,7 @@ trait VoterTrait
     /**
      * {@inheritdoc}
      */
-    public function setParams(ParameterBag $params)
+    public function setParams(array $params)
     {
     }
 

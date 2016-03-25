@@ -11,8 +11,6 @@
 
 namespace Ecn\FeatureToggleBundle\Voters;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -30,9 +28,9 @@ final class ScheduleVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function setParams(ParameterBag $params)
+    public function setParams(array $params)
     {
-        $this->schedule = $params->get('schedule');
+        $this->schedule = array_key_exists('schedule', $params) ? $params['schedule'] : null;
     }
 
     /**

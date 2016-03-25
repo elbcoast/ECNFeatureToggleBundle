@@ -11,9 +11,7 @@
 
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
-use Ecn\FeatureToggleBundle\Voters\RatioVoter;
 use Ecn\FeatureToggleBundle\Voters\ScheduleVoter;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
@@ -51,7 +49,7 @@ class ScheduleVoterTest extends \PHPUnit_Framework_TestCase
     protected function getScheduleVoter($schedule)
     {
         $voter = new ScheduleVoter();
-        $voter->setParams(new ParameterBag(array('schedule' => $schedule)));
+        $voter->setParams(array('schedule' => $schedule));
 
         return $voter;
     }

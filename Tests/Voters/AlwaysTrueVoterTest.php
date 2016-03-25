@@ -12,7 +12,6 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>

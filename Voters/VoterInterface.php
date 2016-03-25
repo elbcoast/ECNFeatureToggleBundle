@@ -11,8 +11,6 @@
 
 namespace Ecn\FeatureToggleBundle\Voters;
 
-use Symfony\Component\HttpFoundation\ParameterBag;
-
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
@@ -21,11 +19,10 @@ interface VoterInterface
     /**
      * Add additional parameters from the feature definition
      *
-     * @param ParameterBag $params
+     * @param array $params
      *
-     * @return void
      */
-    public function setParams(ParameterBag $params);
+    public function setParams(array $params);
 
     /**
      * Sets the name of the feature

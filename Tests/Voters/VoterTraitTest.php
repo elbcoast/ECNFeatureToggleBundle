@@ -13,7 +13,6 @@ namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterTrait;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
@@ -24,7 +23,7 @@ class VoterTraitTest extends \PHPUnit_Framework_TestCase
     {
         $voter = new VoterStub();
 
-        $params = new ParameterBag(array());
+        $params = array();
 
         $this->assertNull($voter->setParams($params));
     }

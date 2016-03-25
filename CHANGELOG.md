@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.1 - 2016-03-25
+
+### Changed
+
+- Removed dependency on Symfony\Component\HttpFoundation\ParameterBag
+- RatioVoter now requires SessionInterface rather than Session in the constructor
 
 ## 1.0.0 - 2016-01-12
 
