@@ -1,5 +1,12 @@
 # Change Log
 
+## 1.1.0 - 2016-03-25
+
+### Added
+
+- Added an AlwaysFalseVoter
+- The default voter can now be overridden by configuration
+
 ## 1.0.1 - 2016-03-25
 
 ### Changed
