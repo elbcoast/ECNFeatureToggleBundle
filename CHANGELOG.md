@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.1 - 2016-06-03
+
+### Fixed
+
+- Updated composer dependency for Symfony 3 support
+
 ## 1.1.0 - 2016-03-25
 
 ### Added
