@@ -170,17 +170,21 @@ ecn_feature_toggle:
 
 ### RequestHeaderVoter
 
-This voter passes, when *all* of the specified request headers and their corresponding values are found and are equal 
-to the headers in the current request.
-
-Note, the conditions are checked if they are *equal* (==) and *not* that they are *identical* (===).
-This is because non-strings for header values in request headers are not allowed. 
-
 The name of the request header itself is by design case-insensitive.
 
-The value of the request header is case-sensitive.   
+Request header values are always treated as strings, so equal (==) checks are used and *not* identical matching (===).
 
-If you want to use this voter, this is the full configuration:
+Request header keys are by design case-insensitive.
+
+The Voter does *not* pass if the request stack contains no current requests.
+
+
+#### a. Specify key/value pairs
+
+This voter passes, when *all* of the specified headers and their corresponding values are found and *equal* 
+to that of the current request headers.
+
+Example for key/value config:
 
 
 ``` yaml
@@ -188,10 +192,32 @@ ecn_feature_toggle:
     features:
         FooRequestFeature:
             voter: RequestHeaderVoter
-            params: { headers: { Upgrade-Insecure-Requests: 1, x-cdn: 'akamai', x-location: 'cn' } }
+            params: { headers: { foo: bar, x-cdn: 'akamai', x-location: 'cn' } }
 ```
 
-In this case, all three headers must exist among the request headers and their corresponding values must be equal to that of the request headers' values.
+
+#### b. specify request header keys only
+
+You can also specify a list of request header keys without values.
+
+In this case, only the existence of *all* of the specified request headers is checked.
+
+All request header names are by the standard case-insensitive.
+
+
+Example:
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        FooRequestFeature:
+            voter: RequestHeaderVoter
+            params: { headers: { x-mobile, x-foo-debug-header } }
+```
+
+
+Mixing the two configurations is discouraged as it will lead to unexpected results by treating the config as key/value pairs, 
+and will most likely cause the Voter to *not* pass.
 
 
 ## Overriding the default voter

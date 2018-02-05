@@ -27,12 +27,18 @@ final class RequestHeaderVoter implements VoterInterface
     /** @var Request|null */
     private $request;
     
+    /** @var bool */
+    private $checkHeaderValues;
+    
     /**
      * {@inheritdoc}
      */
     public function setParams(array $params)
     {
-        $this->headers = array_key_exists('headers', $params) ? $params['headers'] : null;
+        $headers = array_key_exists('headers', $params) ? $params['headers'] : null;
+        
+        $this->checkHeaderValues = $headers ? static::isAssociativeArray($headers) : false;
+        $this->headers           = $headers;
     }
     
     /**
@@ -56,16 +62,33 @@ final class RequestHeaderVoter implements VoterInterface
             return false;
         }
         
-        foreach ($this->headers as $headerKey => $headerValue) {
+        foreach ($this->headers as $key => $value) {
+            
+            $headerKey = $this->checkHeaderValues ? $key : $value;
             if (!$this->request->headers->has($headerKey)) {
                 return false;
             }
             
-            if ($this->request->headers->get($headerKey) != $headerValue) {
-                return false;
+            if ($this->checkHeaderValues) {
+                if ($this->request->headers->get($key) != $value) {
+                    return false;
+                }
             }
         }
         
         return true;
+    }
+    
+    /**
+     * Checks if the provided header configuration is associative or not.
+     * If yes, then we check both keys and values, otherwise only the existence of the request header.
+     *
+     * @param array $arr
+     *
+     * @return bool
+     */
+    public static function isAssociativeArray(array $arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }

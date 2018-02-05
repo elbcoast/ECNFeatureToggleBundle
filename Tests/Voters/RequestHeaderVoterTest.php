@@ -16,11 +16,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @group request-header
  * @author Andras Debreczeni <dev@debreczeniandras.hu>
  */
 class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
 {
+    public function testIsArrayAssociative()
+    {
+        $this->assertTrue(RequestHeaderVoter::isAssociativeArray(['X-cdn' => 1, ['X-Location' => 'CN']]));
+    }
+    
+    public function testIsArrayNotAssociative()
+    {
+        $this->assertFalse(RequestHeaderVoter::isAssociativeArray(['X-cdn', 'X-Location']));
+    }
     
     public function testNoCurrentRequestInRequestStack()
     {
@@ -36,7 +44,7 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($voter->pass());
     }
     
-    public function testEqualOneRequestHeader()
+    public function testEqualOneRequestHeaderWithValue()
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = $requestHeaders;
@@ -46,7 +54,48 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($voter->pass());
     }
     
-    public function testNotEqualOneRequestHeader()
+    public function testOneRequestHeaderExists()
+    {
+        $requestHeaders = ['x-location' => '1'];
+        $headerConfig = ['x-location'];
+        
+        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack($requestHeaders), $headerConfig);
+        
+        $this->assertTrue($voter->pass());
+    }
+    
+    public function testOneRequestHeaderCaseInsensitive()
+    {
+        $requestHeaders = ['X-Location' => '1'];
+        $headerConfig = ['x-location'];
+        
+        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack($requestHeaders), $headerConfig);
+        
+        $this->assertTrue($voter->pass());
+    }
+    
+    public function testTwoRequestHeadersBothExists()
+    {
+        $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
+        $headerConfig = ['x-location', 'x-cdn'];
+        
+        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack($requestHeaders), $headerConfig);
+        
+        $this->assertTrue($voter->pass());
+    }
+    
+    public function testTwoRequestHeadersOneDoesNotExist()
+    {
+        $requestHeaders = ['x-location' => 'CN'];
+        $headerConfig = ['x-location', 'x-cdn'];
+        
+        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack($requestHeaders), $headerConfig);
+        
+        $this->assertFalse($voter->pass());
+    }
+    
+    
+    public function testNotEqualOneRequestHeaderWithValue()
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = ['x-location' => 'cn'];
@@ -56,7 +105,7 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($voter->pass());
     }
     
-    public function testEqualRequestNameCaseInsensitivity()
+    public function testEqualRequestNameCaseInsensitivityWithValue()
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = ['X-Location' => 'CN'];
@@ -66,7 +115,7 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($voter->pass());
     }
     
-    public function testEqualTwoRequestsHeader()
+    public function testEqualTwoRequestsHeaderWithValue()
     {
         $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
         $headerConfig = $requestHeaders;
@@ -76,7 +125,7 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($voter->pass());
     }
     
-    public function testAtLeastOneNonEqualTwoRequestsHeader()
+    public function testAtLeastOneNonEqualTwoRequestsHeaderWithValue()
     {
         $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
         $headerConfig = ['x-location' => 'cn', 'x-cdn' => 'Akamai'];
