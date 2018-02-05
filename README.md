@@ -167,6 +167,33 @@ ecn_feature_toggle:
             params: { schedule: '2015-10-23' }
 ```
 
+
+### RequestHeaderVoter
+
+This voter passes, when *all* of the specified request headers and their corresponding values are found and are equal 
+to the headers in the current request.
+
+Note, the conditions are checked if they are *equal* (==) and *not* that they are *identical* (===).
+This is because non-strings for header values in request headers are not allowed. 
+
+The name of the request header itself is by design case-insensitive.
+
+The value of the request header is case-sensitive.   
+
+If you want to use this voter, this is the full configuration:
+
+
+``` yaml
+ecn_feature_toggle:
+    features:
+        FooRequestFeature:
+            voter: RequestHeaderVoter
+            params: { headers: { Upgrade-Insecure-Requests: 1, x-cdn: 'akamai', x-location: 'cn' } }
+```
+
+In this case, all three headers must exist among the request headers and their corresponding values must be equal to that of the request headers' values.
+
+
 ## Overriding the default voter
 
 You can override the default voter like this:
