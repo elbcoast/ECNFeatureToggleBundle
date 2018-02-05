@@ -32,7 +32,7 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
     
     public function testNoCurrentRequestInRequestStack()
     {
-        $voter = $this->getRequestHeaderVoterWithoutCurrentRequest(new RequestStack(), null);
+        $voter = $this->getRequestHeaderVoter(new RequestStack(), null);
         
         $this->assertFalse($voter->pass());
     }
@@ -146,7 +146,6 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
     
     private function getFakeRequestStack($headers = [])
     {
-        // you can overwrite any value you want through the constructor if you need more control
         $fakeRequest = Request::create('/', 'GET');
         $fakeRequest->headers->add($headers);
     
@@ -154,15 +153,5 @@ class RequestHeaderVoterTest extends \PHPUnit_Framework_TestCase
         $requestStack->push($fakeRequest);
         
         return $requestStack;
-    }
-    
-    private function getRequestHeaderVoterWithoutCurrentRequest(RequestStack $requestStack, $requestHeaders = [])
-    {
-        $voter = new RequestHeaderVoter();
-        
-        $voter->setRequest($requestStack);
-        $voter->setParams(['headers' => $requestHeaders]);
-        
-        return $voter;
     }
 }
