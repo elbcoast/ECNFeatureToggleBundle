@@ -31,7 +31,7 @@
     "target-dir": "Ecn/FeatureToggleBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "2.0-dev"
         }
     }
 }
