@@ -12,11 +12,14 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\RatioVoter;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class RatioVoterTest extends \PHPUnit_Framework_TestCase
+class RatioVoterTest extends TestCase
 {
     public $stickyValues = array();
 
@@ -91,7 +94,8 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
     protected function getRatioVoter($ratio, $sticky = false)
     {
         // Create service stub
-        $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
+        /** @var Session|MockObject $session */
+        $session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -12,11 +12,12 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class AlwaysTrueVoterTest extends \PHPUnit_Framework_TestCase
+class AlwaysTrueVoterTest extends TestCase
 {
     public function testVoterPass()
     {

@@ -19,15 +19,19 @@ use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtMe
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class ControllerListenerTest extends \PHPUnit_Framework_TestCase
+class ControllerListenerTest extends TestCase
 {
     /**
      * @var ControllerListener
@@ -44,7 +48,7 @@ class ControllerListenerTest extends \PHPUnit_Framework_TestCase
      */
     private $event;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->listener = new ControllerListener(
             new AnnotationReader(),
@@ -53,41 +57,35 @@ class ControllerListenerTest extends \PHPUnit_Framework_TestCase
         $this->request = $this->createRequest();
 
         // trigger the autoloading of the @Feature annotation
-        class_exists('Ecn\FeatureToggleBundle\Configuration\Feature');
+        class_exists(Feature::class);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->listener = null;
         $this->request = null;
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testFeatureAnnotationAtMethod()
     {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
         $controller = new FooControllerFeatureAtMethod();
 
         $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
         $this->listener->onKernelController($this->event);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testFeatureAnnotationAtClass()
     {
+        $this->expectException(NotFoundHttpException::class);
         $controller = new FooControllerFeatureAtClass();
         $this->event = $this->getFilterControllerEvent(array($controller, 'barAction'), $this->request);
         $this->listener->onKernelController($this->event);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testFeatureAnnotationAtClassAndMethod()
     {
+        $this->expectException(NotFoundHttpException::class);
         $controller = new FooControllerFeatureAtClassAndMethod();
         $this->event = $this->getFilterControllerEvent(array($controller, 'barAction'), $this->request);
         $this->listener->onKernelController($this->event);
@@ -106,9 +104,9 @@ class ControllerListenerTest extends \PHPUnit_Framework_TestCase
      */
     protected function getFilterControllerEvent($controller, Request $request)
     {
-        /** @var Kernel|\PHPUnit_Framework_MockObject_MockObject $mockKernel */
-        $mockKernel = $this->getMockForAbstractClass('Symfony\Component\HttpKernel\Kernel', array('', ''));
+        /** @var Kernel|MockBuilder $mockKernel */
+        $mockKernel = $this->getMockForAbstractClass(Kernel::class, array('', ''));
 
-        return new FilterControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new ControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

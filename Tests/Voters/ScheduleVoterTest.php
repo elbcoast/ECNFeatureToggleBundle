@@ -12,11 +12,12 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\ScheduleVoter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class ScheduleVoterTest extends \PHPUnit_Framework_TestCase
+class ScheduleVoterTest extends TestCase
 {
     public function testNoScheduleIsSet()
     {

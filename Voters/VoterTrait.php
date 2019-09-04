@@ -26,14 +26,14 @@ trait VoterTrait
     /**
      * {@inheritdoc}
      */
-    public function setParams(array $params)
+    public function setParams(array $params): void
     {
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setFeature($feature)
+    public function setFeature($feature): void
     {
         $this->feature = $feature;
     }

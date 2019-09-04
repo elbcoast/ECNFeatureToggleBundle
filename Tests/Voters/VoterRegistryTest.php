@@ -11,18 +11,21 @@
 
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
+use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
+use PHPUnit\Framework\TestCase;
+use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class VoterRegistryTest extends \PHPUnit_Framework_TestCase
+class VoterRegistryTest extends TestCase
 {
     public function testAddVotersToRegistry()
     {
         // Mock a voter
-        $voterOne = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
-        $voterTwo = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $voterOne = $this->createMock(VoterInterface::class);
+        $voterTwo = $this->createMock(VoterInterface::class);
 
         // Fill up registry
         $registry = new VoterRegistry();
@@ -35,13 +38,11 @@ class VoterRegistryTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @expectedException \Ecn\FeatureToggleBundle\Exception\VoterNotFoundException
-     */
     public function testUnknownVoterException()
     {
+        $this->expectException(VoterNotFoundException::class);
         // Mock a voter
-        $voterOne = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $voterOne = $this->createMock(VoterInterface::class);
 
         // Fill up registry
         $registry = new VoterRegistry();

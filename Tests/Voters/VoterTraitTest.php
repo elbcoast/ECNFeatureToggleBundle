@@ -13,11 +13,12 @@ namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterTrait;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class VoterTraitTest extends \PHPUnit_Framework_TestCase
+class VoterTraitTest extends TestCase
 {
     public function testVoterSetParams()
     {

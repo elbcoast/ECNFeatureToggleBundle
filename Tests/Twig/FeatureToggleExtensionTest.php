@@ -13,11 +13,14 @@ namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Twig\TwigFunction;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
+class FeatureToggleExtensionTest extends TestCase
 {
     public function testCallable()
     {
@@ -27,8 +30,8 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
             ['unknownfeature', false]
         ];
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
-        $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
+        /** @var MockObject|FeatureService $service */
+        $service = $this->getMockBuilder(FeatureService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -42,10 +45,10 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
         $functions = $extension->getFunctions();
 
         // Check if functions are returned as array
-        $this->assertInternalType('array', $functions);
+        $this->assertIsArray($functions);
 
         // Check if the function is a twig function
-        $this->assertInstanceOf('Twig_SimpleFunction', $functions[0]);
+        $this->assertInstanceOf(TwigFunction::class, $functions[0]);
 
         $callable = $functions[0]->getCallable();
 
@@ -60,8 +63,8 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
     public function testIfExtensionHasProperName()
     {
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
-        $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
+        /** @var MockObject|FeatureService $service */
+        $service = $this->getMockBuilder(FeatureService::class)
             ->disableOriginalConstructor()
             ->getMock();
 

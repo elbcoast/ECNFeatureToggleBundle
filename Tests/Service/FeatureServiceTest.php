@@ -9,15 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Ecn\FeatureToggleBundle\Tests\Configuration;
+namespace Ecn\FeatureToggleBundle\Tests\Service;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
-
+use PHPUnit\Framework\TestCase;
+use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class FeatureServiceTest extends \PHPUnit_Framework_TestCase
+class FeatureServiceTest extends TestCase
 {
     public function testIfFeatureMatches()
     {
@@ -70,13 +71,13 @@ class FeatureServiceTest extends \PHPUnit_Framework_TestCase
     {
 
         // Create alwaysTrueVoter stub
-        $alwaysTrueVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $alwaysTrueVoter = $this->createMock(VoterInterface::class);
         $alwaysTrueVoter->expects($this->any())
             ->method('pass')
             ->will($this->returnValue(true));
 
         // Create alwaysFalseVoter stub
-        $alwaysFalseVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
+        $alwaysFalseVoter = $this->createMock(VoterInterface::class);
         $alwaysFalseVoter->expects($this->any())
             ->method('pass')
             ->will($this->returnValue(false));

@@ -11,6 +11,7 @@
 
 namespace Ecn\FeatureToggleBundle\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ecn\FeatureToggleBundle\DependencyInjection\EcnFeatureToggleExtension;
 use Ecn\FeatureToggleBundle\EcnFeatureToggleBundle;
@@ -18,7 +19,7 @@ use Ecn\FeatureToggleBundle\EcnFeatureToggleBundle;
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
+class EcnFeatureToggleBundleTest extends TestCase
 {
     /**
      * @var ContainerBuilder
@@ -60,7 +61,7 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->configuration instanceof ContainerBuilder);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->configuration);
     }
