@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -46,17 +47,20 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
-     * Throws an exception when the given feature is not enabled.
-     *
      * @param FilterControllerEvent $event
+     *
+     * @psalm-suppress RedundantConditionGivenDocblockType
+     * @psalm-suppress PossiblyInvalidArgument
+     * @psalm-suppress ArgumentTypeCoercion
+     *
      * @throws \ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(FilterControllerEvent $event): void
     {
         // We can't resolve the controller name from non-array callables.
         $controller = $event->getController();
 
-        if (!\is_array($controller) && method_exists($controller, '__invoke')) {
+        if (!\is_array($controller) && is_callable($controller)) {
             $controller = [$controller, '__invoke'];
         }
 
@@ -76,31 +80,39 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
-     * Checks for features in annotations.
-     *
-     * @param array $annotations
-     *
-     * @throws NotFoundHttpException If a feature is found, but not enabled.
+     * {@inheritDoc}
      */
-    protected function checkFeature(array $annotations)
-    {
-        foreach ($annotations as $feature) {
-            if ($feature instanceof Feature) {
-                if (!$this->featureService->has($feature->name)) {
-                    throw new NotFoundHttpException();
-                }
-            }
-        }
-    }
-
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
         ];
     }
 
-    private static function getRealClass(string $class): string
+    /**
+     * Checks for features in annotations.
+     *
+     * @param array $annotations
+     *
+     * @throws NotFoundHttpException If a feature is found, but not enabled.
+     */
+    private function checkFeature(array $annotations): void
+    {
+        foreach ($annotations as $feature) {
+            if (($feature instanceof Feature) && !$this->featureService->has($feature->name)) {
+                throw new NotFoundHttpException();
+            }
+        }
+    }
+
+    /**
+     * If the class is a Doctrine proxy we extract the real name
+     *
+     * @param string $class
+     *
+     * @return string
+     */
+    private function getRealClass(string $class): string
     {
         if (false === $pos = strrpos($class, '\\'.Proxy::MARKER.'\\')) {
             return $class;

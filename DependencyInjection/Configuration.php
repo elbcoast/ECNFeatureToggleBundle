@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -25,15 +26,22 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @psalm-suppress PossiblyNullReference
+     * @psalm-suppress PossiblyUndefinedMethod
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('ecn_feature_toggle');
+        $treeBuilder = new TreeBuilder('ecn_feature_toggle');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            $rootNode = $treeBuilder->root('ecn_feature_toggle');
+        }
 
         $rootNode
             ->children()
-//                ->scalarNode('default_voter')->defaultValue('AlwaysTrueVoter')->end()
                 ->arrayNode('default')
                     ->addDefaultsIfNotSet()
                     ->children()
@@ -54,7 +62,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
-        ->end();
+            ->end();
 
         return $treeBuilder;
     }

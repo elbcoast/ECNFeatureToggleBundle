@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -19,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AlwaysTrueVoterTest extends TestCase
 {
-    public function testVoterPass()
+    public function testVoterPass(): void
     {
         $voter = new AlwaysTrueVoter();
 

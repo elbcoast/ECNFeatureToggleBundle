@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -20,65 +21,70 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class RequestHeaderVoter implements VoterInterface
 {
     use VoterTrait;
-    
-    /** @var array */
+
+    /**
+     * @var array
+     */
     private $headers = [];
-    
-    /** @var Request|null */
+
+    /**
+     * @var Request|null
+     */
     private $request;
-    
-    /** @var bool */
+
+    /**
+     * @var bool
+     */
     private $checkHeaderValues;
-    
+
     /**
      * {@inheritdoc}
      */
-    public function setParams(array $params)
+    public function setParams(array $params): void
     {
         $headers = array_key_exists('headers', $params) ? $params['headers'] : null;
-        
+
         $this->checkHeaderValues = $headers ? static::isAssociativeArray($headers) : false;
         $this->headers           = $headers;
     }
-    
+
     /**
      * @param RequestStack $requestStack
      */
-    public function setRequest(RequestStack $requestStack)
+    public function setRequest(RequestStack $requestStack): void
     {
         $this->request = $requestStack->getCurrentRequest();
     }
-    
+
     /**
-     * This voter passes if ALL request headers provided match to their values.
+     * {@inheritDoc}
      */
-    public function pass()
+    public function pass(): bool
     {
         if (!$this->headers) {
             return false;
         }
-        
+
         if (!$this->request) {
             return false;
         }
-        
+
         foreach ($this->headers as $key => $value) {
-            
             $headerKey = $this->checkHeaderValues ? $key : $value;
             if (!$this->request->headers->has($headerKey)) {
                 return false;
             }
-            
+
             if ($this->checkHeaderValues) {
                 if ($this->request->headers->get($key) != $value) {
                     return false;
                 }
             }
         }
-        
+
         return true;
     }
-    
+
     /**
      * Checks if the provided header configuration is associative or not.
      * If yes, then we check both keys and values, otherwise only the existence of the request header.
@@ -87,7 +93,7 @@ final class RequestHeaderVoter implements VoterInterface
      *
      * @return bool
      */
-    public static function isAssociativeArray(array $arr)
+    public static function isAssociativeArray(array $arr): bool
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }

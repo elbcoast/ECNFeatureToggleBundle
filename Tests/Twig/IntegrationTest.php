@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * This file is part of the ECNFeatureToggle package.
  *
@@ -21,7 +21,29 @@ use Twig\Test\IntegrationTestCase;
  */
 class IntegrationTest extends IntegrationTestCase
 {
-    public function getExtensions()
+    public function getFixturesDir(): string
+    {
+        return dirname(__FILE__) . '/Fixtures/';
+    }
+
+    /**
+     * @dataProvider getTests
+     */
+    public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
+    {
+        parent::testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
+    }
+
+    /**
+     * @dataProvider getLegacyTests
+     * @group legacy
+     */
+    public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
+    {
+        parent::testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation);
+    }
+
+    public function getExtensions(): array
     {
         $voterRegistry = new VoterRegistry();
 
@@ -30,12 +52,12 @@ class IntegrationTest extends IntegrationTestCase
         $featureService = new FeatureService(
             [
                 'feature' => [
-                    'voter'  => 'AlwaysTrueVoter',
+                    'voter' => 'AlwaysTrueVoter',
                     'params' => [],
                 ],
             ],
             [
-                'voter'  => 'AlwaysTrueVoter',
+                'voter' => 'AlwaysTrueVoter',
                 'params' => [],
             ],
             $voterRegistry
@@ -44,10 +66,5 @@ class IntegrationTest extends IntegrationTestCase
         return [
             new FeatureToggleExtension($featureService),
         ];
-    }
-
-    public function getFixturesDir()
-    {
-        return dirname(__FILE__).'/Fixtures/';
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -11,8 +12,8 @@
 
 namespace Ecn\FeatureToggleBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -20,7 +21,10 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class VoterCompilerPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    /**
+     * {@inheritDoc}
+     */
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('ecn_featuretoggle.voter_registry')) {
             return;
@@ -38,7 +42,7 @@ class VoterCompilerPass implements CompilerPassInterface
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall(
                     'addVoter',
-                    array(new Reference($id), $attributes["alias"])
+                    [new Reference($id), $attributes["alias"]]
                 );
             }
         }

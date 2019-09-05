@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -21,7 +22,7 @@ use Ecn\FeatureToggleBundle\Voters\VoterInterface;
  */
 class VoterRegistryTest extends TestCase
 {
-    public function testAddVotersToRegistry()
+    public function testAddVotersToRegistry(): void
     {
         // Mock a voter
         $voterOne = $this->createMock(VoterInterface::class);
@@ -38,7 +39,7 @@ class VoterRegistryTest extends TestCase
 
     }
 
-    public function testUnknownVoterException()
+    public function testUnknownVoterException(): void
     {
         $this->expectException(VoterNotFoundException::class);
         // Mock a voter

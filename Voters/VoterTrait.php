@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -33,7 +34,7 @@ trait VoterTrait
     /**
      * {@inheritdoc}
      */
-    public function setFeature($feature): void
+    public function setFeature(string $feature): void
     {
         $this->feature = $feature;
     }

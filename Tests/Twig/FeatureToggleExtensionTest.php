@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -22,7 +23,7 @@ use Twig\TwigFunction;
  */
 class FeatureToggleExtensionTest extends TestCase
 {
-    public function testCallable()
+    public function testCallable(): void
     {
         // Define response map for service stub
         $map = [
@@ -35,9 +36,9 @@ class FeatureToggleExtensionTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $service->expects($this->any())
+        $service
             ->method('has')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         // Create extension
         $extension = new FeatureToggleExtension($service);

@@ -5,5 +5,5 @@
 feature content
 {% endif %}
 --DATA--
-return array()
+return []
 --EXPECT--

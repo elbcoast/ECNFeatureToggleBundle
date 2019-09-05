@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -12,22 +13,34 @@
 namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleNode;
-use Twig\Test\NodeTestCase;
+use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
-use Twig\Node\Expression\NameExpression;
+use Twig\Test\NodeTestCase;
+
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
 class FeatureToggleNodeTest extends NodeTestCase
 {
-    public function getTests()
+    /**
+     * @dataProvider getTests
+     */
+    public function testCompile($node, $source, $environment = null, $isPattern = false)
+    {
+        parent::testCompile($node, $source, $environment = null, $isPattern = false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTests(): array
     {
         $tests = [];
 
         $feature = new Node([
             new PrintNode(new NameExpression('foo', 1), 1),
-        ], array(), 1);
+        ], [], 1);
 
         $node = new FeatureToggleNode('feature', $feature, 1);
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -20,7 +21,10 @@ use Ecn\FeatureToggleBundle\Voters\VoterInterface;
  */
 class FeatureServiceTest extends TestCase
 {
-    public function testIfFeatureMatches()
+    /**
+     * Test new feature
+     */
+    public function testIfFeatureMatches(): void
     {
 
         // Define a feature
@@ -42,7 +46,10 @@ class FeatureServiceTest extends TestCase
         $this->assertFalse($service->has('unknownfeature'));
     }
 
-    public function testDefaultVoter()
+    /**
+     * Test Default voter
+     */
+    public function testDefaultVoter(): void
     {
 
         // Define a feature
@@ -67,20 +74,20 @@ class FeatureServiceTest extends TestCase
     /**
      * @return VoterRegistry
      */
-    protected function getRegistry()
+    protected function getRegistry(): VoterRegistry
     {
 
         // Create alwaysTrueVoter stub
         $alwaysTrueVoter = $this->createMock(VoterInterface::class);
-        $alwaysTrueVoter->expects($this->any())
+        $alwaysTrueVoter
             ->method('pass')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         // Create alwaysFalseVoter stub
         $alwaysFalseVoter = $this->createMock(VoterInterface::class);
-        $alwaysFalseVoter->expects($this->any())
+        $alwaysFalseVoter
             ->method('pass')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         // Create a registry with the voter stubs in it
         $registry = new VoterRegistry();

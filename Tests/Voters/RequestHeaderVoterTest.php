@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -21,31 +22,51 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestHeaderVoterTest extends TestCase
 {
-    public function testIsArrayAssociative()
+    public function testIsArrayAssociative(): void
     {
         $this->assertTrue(RequestHeaderVoter::isAssociativeArray(['X-cdn' => 1, ['X-Location' => 'CN']]));
     }
 
-    public function testIsArrayNotAssociative()
+    public function testIsArrayNotAssociative(): void
     {
         $this->assertFalse(RequestHeaderVoter::isAssociativeArray(['X-cdn', 'X-Location']));
     }
 
-    public function testNoCurrentRequestInRequestStack()
+    public function testNoCurrentRequestInRequestStack(): void
     {
         $voter = $this->getRequestHeaderVoter(new RequestStack(), null);
 
         $this->assertFalse($voter->pass());
     }
 
-    public function testNoRequestHeadersProvided()
+    private function getRequestHeaderVoter(RequestStack $requestStack, $requestHeaders = null): RequestHeaderVoter
+    {
+        $voter = new RequestHeaderVoter();
+        $voter->setRequest($requestStack);
+        $voter->setParams(['headers' => $requestHeaders]);
+
+        return $voter;
+    }
+
+    public function testNoRequestHeadersProvided(): void
     {
         $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack(), null);
 
         $this->assertFalse($voter->pass());
     }
 
-    public function testEqualOneRequestHeaderWithValue()
+    private function getFakeRequestStack($headers = []): RequestStack
+    {
+        $fakeRequest = Request::create('/', 'GET');
+        $fakeRequest->headers->add($headers);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($fakeRequest);
+
+        return $requestStack;
+    }
+
+    public function testEqualOneRequestHeaderWithValue(): void
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = $requestHeaders;
@@ -55,7 +76,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testOneRequestHeaderExists()
+    public function testOneRequestHeaderExists(): void
     {
         $requestHeaders = ['x-location' => '1'];
         $headerConfig = ['x-location'];
@@ -65,7 +86,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testOneRequestHeaderCaseInsensitive()
+    public function testOneRequestHeaderCaseInsensitive(): void
     {
         $requestHeaders = ['X-Location' => '1'];
         $headerConfig = ['x-location'];
@@ -75,7 +96,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testTwoRequestHeadersBothExists()
+    public function testTwoRequestHeadersBothExists(): void
     {
         $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
         $headerConfig = ['x-location', 'x-cdn'];
@@ -85,7 +106,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testTwoRequestHeadersOneDoesNotExist()
+    public function testTwoRequestHeadersOneDoesNotExist(): void
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = ['x-location', 'x-cdn'];
@@ -95,8 +116,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertFalse($voter->pass());
     }
 
-
-    public function testNotEqualOneRequestHeaderWithValue()
+    public function testNotEqualOneRequestHeaderWithValue(): void
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = ['x-location' => 'cn'];
@@ -106,7 +126,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertFalse($voter->pass());
     }
 
-    public function testEqualRequestNameCaseInsensitivityWithValue()
+    public function testEqualRequestNameCaseInsensitivityWithValue(): void
     {
         $requestHeaders = ['x-location' => 'CN'];
         $headerConfig = ['X-Location' => 'CN'];
@@ -116,7 +136,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testEqualTwoRequestsHeaderWithValue()
+    public function testEqualTwoRequestsHeaderWithValue(): void
     {
         $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
         $headerConfig = $requestHeaders;
@@ -126,7 +146,7 @@ class RequestHeaderVoterTest extends TestCase
         $this->assertTrue($voter->pass());
     }
 
-    public function testAtLeastOneNonEqualTwoRequestsHeaderWithValue()
+    public function testAtLeastOneNonEqualTwoRequestsHeaderWithValue(): void
     {
         $requestHeaders = ['x-location' => 'CN', 'x-cdn' => 'Akamai'];
         $headerConfig = ['x-location' => 'cn', 'x-cdn' => 'Akamai'];
@@ -134,25 +154,5 @@ class RequestHeaderVoterTest extends TestCase
         $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack($requestHeaders), $headerConfig);
 
         $this->assertFalse($voter->pass());
-    }
-
-    private function getRequestHeaderVoter(RequestStack $requestStack, $requestHeaders = null)
-    {
-        $voter = new RequestHeaderVoter();
-        $voter->setRequest($requestStack);
-        $voter->setParams(['headers' => $requestHeaders]);
-
-        return $voter;
-    }
-
-    private function getFakeRequestStack($headers = [])
-    {
-        $fakeRequest = Request::create('/', 'GET');
-        $fakeRequest->headers->add($headers);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($fakeRequest);
-
-        return $requestStack;
     }
 }

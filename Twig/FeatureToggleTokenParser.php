@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -11,8 +12,9 @@
 
 namespace Ecn\FeatureToggleBundle\Twig;
 
-use Twig\TokenParser\AbstractTokenParser;
 use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
@@ -21,7 +23,7 @@ class FeatureToggleTokenParser extends AbstractTokenParser
     /**
      * {@inheritdoc}
      */
-    public function parse(Token $token)
+    public function parse(Token $token): FeatureToggleNode
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
@@ -34,16 +36,21 @@ class FeatureToggleTokenParser extends AbstractTokenParser
         return new FeatureToggleNode($name, $feature, $lineno, $this->getTag());
     }
 
-    public function decideFeatureEnd(Token $token)
-    {
-        return $token->test('endfeature');
-    }
-
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'feature';
+    }
+
+    /**
+     * @param Token $token
+     *
+     * @return bool
+     */
+    public function decideFeatureEnd(Token $token): bool
+    {
+        return $token->test('endfeature');
     }
 }

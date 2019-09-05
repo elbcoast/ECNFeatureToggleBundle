@@ -1,4 +1,5 @@
 <?php
+declare (strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -22,7 +23,7 @@ interface VoterInterface
      * @param array $params
      *
      */
-    public function setParams(array $params);
+    public function setParams(array $params): void;
 
     /**
      * Sets the name of the feature
@@ -31,12 +32,12 @@ interface VoterInterface
      *
      * @return void
      */
-    public function setFeature($feature);
+    public function setFeature(string $feature): void;
 
     /**
      * Check if conditions for a feature are matched
      *
      * @return bool
      */
-    public function pass();
+    public function pass(): bool;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -20,16 +21,16 @@ use PHPUnit\Framework\TestCase;
  */
 class VoterTraitTest extends TestCase
 {
-    public function testVoterSetParams()
+    public function testVoterSetParams(): void
     {
         $voter = new VoterStub();
 
-        $params = array();
+        $params = [];
 
         $this->assertNull($voter->setParams($params));
     }
 
-    public function testVoterSetFeature()
+    public function testVoterSetFeature(): void
     {
         $voter = new VoterStub();
 
@@ -41,7 +42,7 @@ class VoterStub implements VoterInterface
 {
     use VoterTrait;
 
-    public function pass()
+    public function pass(): bool
     {
         return true;
     }

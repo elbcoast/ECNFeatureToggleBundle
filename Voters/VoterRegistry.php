@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -21,18 +22,13 @@ class VoterRegistry
     /**
      * @var array
      */
-    private $voters;
-
-    public function __construct()
-    {
-        $this->voters = array();
-    }
+    private $voters = [];
 
     /**
      * @param VoterInterface $voter The voter service to add
      * @param string         $alias The alias of the added voter
      */
-    public function addVoter(VoterInterface $voter, $alias)
+    public function addVoter(VoterInterface $voter, $alias): void
     {
         $this->voters[$alias] = $voter;
     }
@@ -42,16 +38,16 @@ class VoterRegistry
      *
      * @param string $alias
      *
-     * @throws VoterNotFoundException
-     *
      * @return VoterInterface|null
+     *
+     * @throws VoterNotFoundException
      */
-    public function getVoter($alias)
+    public function getVoter(string $alias): ?VoterInterface
     {
         if (array_key_exists($alias, $this->voters)) {
             return $this->voters[$alias];
         }
 
-        throw new VoterNotFoundException();
+        throw new VoterNotFoundException(sprintf('No voter with this alias: "%s" is registered', $alias));
     }
 }

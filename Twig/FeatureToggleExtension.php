@@ -36,26 +36,37 @@ class FeatureToggleExtension extends AbstractExtension
     /**
      * @return FeatureService
      */
-    public function getFeatureService()
+    public function getFeatureService(): FeatureService
     {
         return $this->featureService;
     }
 
-    public function getFunctions()
+    /**
+     * @return TwigFunction[]
+     */
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('feature', [$this, 'hasFeature']),
         ];
     }
 
-    public function getTokenParsers()
+    /**
+     * @return FeatureToggleTokenParser[]
+     */
+    public function getTokenParsers(): array
     {
         return [
             new FeatureToggleTokenParser(),
         ];
     }
 
-    public function hasFeature($feature): bool
+    /**
+     * @param string $feature
+     *
+     * @return bool
+     */
+    public function hasFeature(string $feature): bool
     {
         return $this->featureService->has($feature);
     }

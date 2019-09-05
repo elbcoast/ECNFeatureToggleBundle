@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -19,12 +20,23 @@ use Twig\Node\Node;
  */
 class FeatureToggleNode extends Node
 {
-    public function __construct($name, Node $feature, $lineno, $tag = null)
+    /**
+     * FeatureToggleNode constructor.
+     *
+     * @param string      $name
+     * @param Node        $feature
+     * @param int         $lineno
+     * @param string|null $tag
+     */
+    public function __construct(string $name, Node $feature, int $lineno = 0, string $tag = null)
     {
         parent::__construct(['feature' => $feature], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(Compiler $compiler)
+    /**
+     * @param Compiler $compiler
+     */
+    public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');
 
@@ -38,7 +50,6 @@ class FeatureToggleNode extends Node
             ->indent()
             ->subcompile($this->getNode('feature'))
             ->outdent()
-            ->write('}')
-        ;
+            ->write('}');
     }
 }
