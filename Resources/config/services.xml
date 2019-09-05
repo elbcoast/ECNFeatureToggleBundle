@@ -17,6 +17,7 @@
     </parameters>
 
     <services>
+        <defaults public="false" />
 
         <!-- FeatureService -->
         <service id="ecn_featuretoggle" class="%ecn_featuretoggle.class%">

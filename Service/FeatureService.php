@@ -27,7 +27,7 @@ class FeatureService
     protected $features;
 
     /**
-     * @var string
+     * @var array
      */
     protected $defaultVoter;
 

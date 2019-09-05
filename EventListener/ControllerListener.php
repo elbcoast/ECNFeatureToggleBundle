@@ -12,7 +12,7 @@
 namespace Ecn\FeatureToggleBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Common\Persistence\Proxy;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -49,15 +49,22 @@ class ControllerListener implements EventSubscriberInterface
      * Throws an exception when the given feature is not enabled.
      *
      * @param FilterControllerEvent $event
+     * @throws \ReflectionException
      */
     public function onKernelController(FilterControllerEvent $event)
     {
         // We can't resolve the controller name from non-array callables.
-        if (!is_array($controller = $event->getController())) {
+        $controller = $event->getController();
+
+        if (!\is_array($controller) && method_exists($controller, '__invoke')) {
+            $controller = [$controller, '__invoke'];
+        }
+
+        if (!\is_array($controller)) {
             return;
         }
 
-        $className = class_exists('Doctrine\Common\Util\ClassUtils') ? ClassUtils::getClass($controller[0]) : get_class($controller[0]);
+        $className = $this->getRealClass(\get_class($controller[0]));
         $object = new \ReflectionClass($className);
         $method = $object->getMethod($controller[1]);
 
@@ -91,5 +98,14 @@ class ControllerListener implements EventSubscriberInterface
         return [
             KernelEvents::CONTROLLER => 'onKernelController',
         ];
+    }
+
+    private static function getRealClass(string $class): string
+    {
+        if (false === $pos = strrpos($class, '\\'.Proxy::MARKER.'\\')) {
+            return $class;
+        }
+
+        return substr($class, $pos + Proxy::MARKER_LENGTH + 2);
     }
 }

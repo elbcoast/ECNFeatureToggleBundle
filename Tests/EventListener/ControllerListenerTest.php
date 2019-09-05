@@ -26,7 +26,6 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
@@ -68,7 +67,7 @@ class ControllerListenerTest extends TestCase
 
     public function testFeatureAnnotationAtMethod()
     {
-        $this->expectException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
         $controller = new FooControllerFeatureAtMethod();
 
         $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
@@ -107,6 +106,6 @@ class ControllerListenerTest extends TestCase
         /** @var Kernel|MockBuilder $mockKernel */
         $mockKernel = $this->getMockForAbstractClass(Kernel::class, array('', ''));
 
-        return new ControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new FilterControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 }

@@ -26,7 +26,9 @@ use Symfony\Component\DependencyInjection\Loader;
 class EcnFeatureToggleExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * @param array $configs
+     * @param ContainerBuilder $container
+     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
