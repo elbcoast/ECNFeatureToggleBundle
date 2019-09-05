@@ -11,28 +11,30 @@
 
 namespace Ecn\FeatureToggleBundle\Twig;
 
+use Twig\TokenParser\AbstractTokenParser;
+use Twig\Token;
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class FeatureToggleTokenParser extends \Twig_TokenParser
+class FeatureToggleTokenParser extends AbstractTokenParser
 {
     /**
      * {@inheritdoc}
      */
-    public function parse(\Twig_Token $token)
+    public function parse(Token $token)
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
 
-        $name = $stream->expect(\Twig_Token::NAME_TYPE)->getValue();
-        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+        $name = $stream->expect(Token::NAME_TYPE)->getValue();
+        $stream->expect(Token::BLOCK_END_TYPE);
         $feature = $this->parser->subparse([$this, 'decideFeatureEnd'], true);
-        $stream->expect(\Twig_Token::BLOCK_END_TYPE);
+        $stream->expect(Token::BLOCK_END_TYPE);
 
         return new FeatureToggleNode($name, $feature, $lineno, $this->getTag());
     }
 
-    public function decideFeatureEnd(\Twig_Token $token)
+    public function decideFeatureEnd(Token $token)
     {
         return $token->test('endfeature');
     }

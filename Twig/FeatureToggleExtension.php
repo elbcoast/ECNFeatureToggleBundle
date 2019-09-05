@@ -12,11 +12,13 @@
 namespace Ecn\FeatureToggleBundle\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class FeatureToggleExtension extends \Twig_Extension
+class FeatureToggleExtension extends AbstractExtension
 {
     /**
      * @var FeatureService
@@ -42,7 +44,7 @@ class FeatureToggleExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('feature', [$this->featureService, 'has']),
+            new TwigFunction('feature', [$this, 'hasFeature']),
         ];
     }
 
@@ -53,8 +55,8 @@ class FeatureToggleExtension extends \Twig_Extension
         ];
     }
 
-    public function getName()
+    public function hasFeature($feature): bool
     {
-        return 'feature_toggle';
+        return $this->featureService->has($feature);
     }
 }

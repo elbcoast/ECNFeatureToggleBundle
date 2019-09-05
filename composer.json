@@ -11,8 +11,8 @@
     ],
     "require": {
         "php": "^7.2",
-        "symfony/framework-bundle": "~2.7|~3.0",
-        "twig/twig": ">=1.12,<2.0-dev",
+        "symfony/framework-bundle": "^3.4|^4.0",
+        "twig/twig": "^2.6",
         "doctrine/annotations": "~1.0"
     },
     "require-dev": {

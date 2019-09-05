@@ -59,18 +59,4 @@ class FeatureToggleExtensionTest extends TestCase
         $this->assertFalse($callable('unknownfeature'));
 
     }
-
-    public function testIfExtensionHasProperName()
-    {
-
-        /** @var MockObject|FeatureService $service */
-        $service = $this->getMockBuilder(FeatureService::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        // Create extension
-        $extension = new FeatureToggleExtension($service);
-
-        $this->assertEquals('feature_toggle', $extension->getName());
-    }
 }

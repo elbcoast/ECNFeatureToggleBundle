@@ -14,11 +14,12 @@ namespace Ecn\FeatureToggleBundle\Twig;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
+use Twig\Test\IntegrationTestCase;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
-class IntegrationTest extends \Twig_Test_IntegrationTestCase
+class IntegrationTest extends IntegrationTestCase
 {
     public function getExtensions()
     {
