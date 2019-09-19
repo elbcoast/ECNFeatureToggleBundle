@@ -9,6 +9,7 @@
         <ignoreFiles>
             <directory name="Tests" />
             <directory name="vendor" />
+            <directory name="Twig" />
         </ignoreFiles>
     </projectFiles>
 

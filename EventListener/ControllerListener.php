@@ -49,9 +49,8 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * @param FilterControllerEvent $event
      *
-     * @psalm-suppress RedundantConditionGivenDocblockType
-     * @psalm-suppress PossiblyInvalidArgument
-     * @psalm-suppress ArgumentTypeCoercion
+     * @psalm-suppress DeprecatedClass
+     *
      *
      * @throws \ReflectionException
      */
@@ -60,7 +59,7 @@ class ControllerListener implements EventSubscriberInterface
         // We can't resolve the controller name from non-array callables.
         $controller = $event->getController();
 
-        if (!\is_array($controller) && is_callable($controller)) {
+        if (\is_object($controller) && method_exists($controller, '__invoke')) {
             $controller = [$controller, '__invoke'];
         }
 
@@ -68,7 +67,9 @@ class ControllerListener implements EventSubscriberInterface
             return;
         }
 
-        $className = $this->getRealClass(\get_class($controller[0]));
+        $className = $this->getRealClass(is_object($controller[0]) ? \get_class($controller[0]) : $controller[0]);
+
+        /** @psalm-suppress ArgumentTypeCoercion */
         $object = new \ReflectionClass($className);
         $method = $object->getMethod($controller[1]);
 

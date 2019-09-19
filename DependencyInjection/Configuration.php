@@ -29,6 +29,7 @@ class Configuration implements ConfigurationInterface
      *
      * @psalm-suppress PossiblyNullReference
      * @psalm-suppress PossiblyUndefinedMethod
+     * @psalm-suppress RedundantCondition
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
@@ -37,6 +38,7 @@ class Configuration implements ConfigurationInterface
         if (method_exists($treeBuilder, 'getRootNode')) {
             $rootNode = $treeBuilder->getRootNode();
         } else {
+            /** @psalm-suppress UndefinedMethod */
             $rootNode = $treeBuilder->root('ecn_feature_toggle');
         }
 
