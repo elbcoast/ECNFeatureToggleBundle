@@ -12,16 +12,20 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\Tests\EventListener;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\EventListener\ControllerListener;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtClass;
+use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\__CG__\Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtClass as ProxyFooControllerFeatureAtClass;
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtClassAndMethod;
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtInvoke;
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtMethod;
+use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtStaticMethod;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +54,11 @@ class ControllerListenerTest extends TestCase
      * @var FilterControllerEvent
      */
     private $event;
+
+    /**
+     * @var FeatureService&MockObject
+     */
+    private $mockListener;
 
     /**
      * Set up tests
@@ -90,6 +99,22 @@ class ControllerListenerTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $controller = new FooControllerFeatureAtMethod();
+
+        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+
+        $this->listener->onKernelController($this->event);
+    }
+
+    /**
+     * Test Annotation Feature at static method
+     *
+     * @throws ReflectionException
+     */
+    public function testFeatureAnnotationAtStaticMethod(): void
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller = new FooControllerFeatureAtStaticMethod();
 
         $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
 
@@ -154,5 +179,55 @@ class ControllerListenerTest extends TestCase
         $this->event = $this->getFilterControllerEvent($controller, $this->request);
 
         $this->listener->onKernelController($this->event);
+    }
+
+    /**
+     * Test Proxy extends class with Annotation Feature
+     *
+     * @throws ReflectionException
+     */
+    public function testFeatureProxyExtendsAnnotation(): void
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $controller = new ProxyFooControllerFeatureAtClass();
+
+        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+
+        $this->listener->onKernelController($this->event);
+    }
+
+    /**
+     * @param callable $controller
+     *
+     * @throws ReflectionException
+     * @throws AnnotationException
+     *
+     * @dataProvider callableDataProvider
+     */
+    public function testAvoidClosure(callable $controller): void
+    {
+        /** @var FeatureService&MockObject $featureService */
+        $featureService = $this->createMock(FeatureService::class);
+        $featureService->expects($this->never())->method('has');
+
+        $listener = new ControllerListener(
+            new AnnotationReader(),
+            $featureService
+        );
+
+        $event = $this->getFilterControllerEvent($controller, $this->request);
+
+        $listener->onKernelController($event);
+    }
+
+    /**
+     * @return array
+     */
+    public function callableDataProvider(): array
+    {
+        return [
+            [static function () {return 'test';}]
+        ];
     }
 }

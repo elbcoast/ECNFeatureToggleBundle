@@ -35,7 +35,7 @@ class RatioVoterTest extends TestCase
     protected function getRatioVoter($ratio, $sticky = false): RatioVoter
     {
         // Create service stub
-        /** @var Session|MockObject $session */
+        /** @var Session&MockObject $session */
         $session = $this->getMockBuilder(Session::class)
             ->disableOriginalConstructor()
             ->getMock();

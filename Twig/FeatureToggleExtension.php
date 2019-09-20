@@ -17,6 +17,8 @@ use Twig\TwigFunction;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
+ *
+ * @psalm-suppress UndefinedClass
  */
 class FeatureToggleExtension extends AbstractExtension
 {

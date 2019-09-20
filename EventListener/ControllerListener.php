@@ -59,7 +59,10 @@ class ControllerListener implements EventSubscriberInterface
         // We can't resolve the controller name from non-array callables.
         $controller = $event->getController();
 
-        if (\is_object($controller) && method_exists($controller, '__invoke')) {
+        if ((!$controller instanceof \Closure)
+            && \is_object($controller)
+            && method_exists($controller, '__invoke')
+        ) {
             $controller = [$controller, '__invoke'];
         }
 
@@ -107,7 +110,7 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
-     * If the class is a Doctrine proxy we extract the real name
+     * Gets the real class name of a class name that could be a proxy.
      *
      * @param string $class
      *

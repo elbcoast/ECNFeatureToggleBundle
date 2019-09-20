@@ -67,13 +67,13 @@ class FeatureService
             return false;
         }
 
-        $voter = $this->initVoter($feature);
+        try {
+            $voter = $this->initVoter($feature);
 
-        if ($voter) {
             return $voter->pass();
+        } catch (VoterNotFoundException $exception) {
+            throw $exception;
         }
-
-        return false;
     }
 
     /**
@@ -81,24 +81,21 @@ class FeatureService
      *
      * @param string $feature
      *
-     * @return VoterInterface|null
-     *
-     * @throws VoterNotFoundException
+     * @return VoterInterface
      */
-    protected function initVoter(string $feature): ?VoterInterface
+    protected function initVoter(string $feature): VoterInterface
     {
         $featureDefinition = $this->features[$feature];
 
         $voterName = $featureDefinition['voter'] ?: $this->defaultVoter['voter'];
         $voter = $this->voterRegistry->getVoter($voterName);
 
-        if ($voter) {
-            $defaultParams = $this->defaultVoter['params'];
-            $params = $featureDefinition['params'] ?: $defaultParams;
 
-            $voter->setFeature($feature);
-            $voter->setParams($params);
-        }
+        $defaultParams = $this->defaultVoter['params'];
+        $params = $featureDefinition['params'] ?: $defaultParams;
+
+        $voter->setFeature($feature);
+        $voter->setParams($params);
 
         return $voter;
     }

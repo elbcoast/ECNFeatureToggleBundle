@@ -17,6 +17,8 @@ use Twig\TokenParser\AbstractTokenParser;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ *
+ * @psalm-suppress UndefinedClass
  */
 class FeatureToggleTokenParser extends AbstractTokenParser
 {

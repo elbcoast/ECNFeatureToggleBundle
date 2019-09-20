@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Otelo-MiddlewareBundle">
+<ruleset name="EcnFeatureToggleBundle">
     <description>PSR2 Coding Standard on EcnFeatureToggleBundle</description>
 
     <file>./</file>
@@ -10,17 +10,4 @@
     <arg name="colors"/>
 
     <rule ref="vendor/escapestudios/symfony2-coding-standard/Symfony"/>
-
-    <!-- Disable InterfaceName sniff -->
-<!--    <rule ref="Symfony.NamingConventions.ValidClassName.InvalidInterfaceName">
-        <severity>0</severity>
-    </rule>
-    &lt;!&ndash; Disable AbstractName sniff &ndash;&gt;
-    <rule ref="Symfony.NamingConventions.ValidClassName.InvalidAbstractName">
-        <severity>0</severity>
-    </rule>
-    &lt;!&ndash; Disable "Declare all the arguments on the same line as the method/function name, no matter how many arguments there are." sniff &ndash;&gt;
-    <rule ref="Symfony.Functions.Arguments.Invalid">
-        <severity>0</severity>
-    </rule>-->
 </ruleset>

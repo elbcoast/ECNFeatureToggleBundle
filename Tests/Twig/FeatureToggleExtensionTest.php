@@ -31,7 +31,7 @@ class FeatureToggleExtensionTest extends TestCase
             ['unknownfeature', false]
         ];
 
-        /** @var MockObject|FeatureService $service */
+        /** @var MockObject&FeatureService $service */
         $service = $this->getMockBuilder(FeatureService::class)
             ->disableOriginalConstructor()
             ->getMock();

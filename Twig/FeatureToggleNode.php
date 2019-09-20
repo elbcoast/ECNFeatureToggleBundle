@@ -17,6 +17,8 @@ use Twig\Node\Node;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ *
+ * @psalm-suppress UndefinedClass
  */
 class FeatureToggleNode extends Node
 {

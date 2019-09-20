@@ -20,7 +20,7 @@ use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 class VoterRegistry
 {
     /**
-     * @var array
+     * @var array<string, VoterInterface>
      */
     private $voters = [];
 
@@ -28,7 +28,7 @@ class VoterRegistry
      * @param VoterInterface $voter The voter service to add
      * @param string         $alias The alias of the added voter
      */
-    public function addVoter(VoterInterface $voter, $alias): void
+    public function addVoter(VoterInterface $voter, string $alias): void
     {
         $this->voters[$alias] = $voter;
     }
@@ -38,11 +38,11 @@ class VoterRegistry
      *
      * @param string $alias
      *
-     * @return VoterInterface|null
+     * @return VoterInterface
      *
      * @throws VoterNotFoundException
      */
-    public function getVoter(string $alias): ?VoterInterface
+    public function getVoter(string $alias): VoterInterface
     {
         if (array_key_exists($alias, $this->voters)) {
             return $this->voters[$alias];
