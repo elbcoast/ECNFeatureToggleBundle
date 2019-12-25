@@ -3,8 +3,14 @@
 [![Build Status](https://travis-ci.org/elbcoast/ECNFeatureToggleBundle.svg?branch=master)](https://travis-ci.org/elbcoast/ECNFeatureToggleBundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/85a8ed5d-78ac-4523-bb9a-ebf03e15f1a6/mini.png)](https://insight.sensiolabs.com/projects/85a8ed5d-78ac-4523-bb9a-ebf03e15f1a6)
 
-**This bundle adds feature toggle functionality to your Symfony 2 project.**
+**This bundle adds feature toggle functionality to your Symfony project.**
 
+## Requirements
+
+In order to install ECNFeatureToggleBundle, you need at least
+
+- PHP 7.2 or greater
+- Symfony 3.4, Symfony 4.2 or greater
 
 ## Installation
 
@@ -99,7 +105,7 @@ if ($this->get('feature')->has('MyNewFeature')) {
 
 ## Voters
 
-In order to decide if a feature is available or not, voters are being used. Currently there are three voters included.
+In order to decide if a feature is available or not, voters are being used. Currently there are five voters included.
 
 
 ### AlwaysTrueVoter
@@ -181,7 +187,7 @@ The Voter does *not* pass if the request stack contains no current requests.
 
 #### a. Specify key/value pairs
 
-This voter passes, when *all* of the specified headers and their corresponding values are found and *equal* 
+This voter passes, when *all* of the specified headers and their corresponding values are found and *equal*
 to that of the current request headers.
 
 Example for key/value config:
@@ -216,7 +222,7 @@ ecn_feature_toggle:
 ```
 
 
-Mixing the two configurations is discouraged as it will lead to unexpected results by treating the config as key/value pairs, 
+Mixing the two configurations is discouraged as it will lead to unexpected results by treating the config as key/value pairs,
 and will most likely cause the Voter to *not* pass.
 
 
@@ -226,7 +232,7 @@ You can override the default voter like this:
 
 ``` yaml
 ecn_feature_toggle:
-    default:        
+    default:
         voter: RatioVoter
         params: { ratio: 0.1, sticky: true }
 ```

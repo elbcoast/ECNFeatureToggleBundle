@@ -1,5 +1,17 @@
 # Change Log
 
+
+## 2.0.0 - 2019-12-25
+
+### Added
+
+- Symfony 4 support
+- PHP 7 Coding Style
+
+### Changed
+
+- Removed Twig dependency
+
 ## 1.1.1 - 2016-06-03
 
 ### Fixed
