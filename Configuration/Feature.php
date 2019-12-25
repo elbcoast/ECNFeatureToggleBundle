@@ -31,5 +31,5 @@ class Feature
      *
      * @Required()
      */
-    public $name;
+    public $name = "";
 }

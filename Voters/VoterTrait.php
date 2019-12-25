@@ -22,7 +22,7 @@ trait VoterTrait
     /**
      * @var string
      */
-    private $feature;
+    private $feature = "";
 
     /**
      * {@inheritdoc}

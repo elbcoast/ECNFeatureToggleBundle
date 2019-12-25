@@ -35,7 +35,7 @@ final class RequestHeaderVoter implements VoterInterface
     /**
      * @var bool
      */
-    private $checkHeaderValues;
+    private $checkHeaderValues = false;
 
     /**
      * {@inheritdoc}
