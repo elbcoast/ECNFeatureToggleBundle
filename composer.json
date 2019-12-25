@@ -34,7 +34,9 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
+        "test-no-twig": "vendor/bin/phpunit --testsuite without_twig",
         "psalm": "vendor/bin/psalm",
+        "psalm-no-twig": "vendor/bin/psalm --config=psalm.without_twig.xml",
         "test-ci": "vendor/bin/phpunit --coverage-text --coverage-clover build/coverage.xml"
     },
     "minimum-stability": "dev",

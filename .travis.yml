@@ -5,7 +5,7 @@ sudo: false
 php:
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
 
 cache:
   directories:
@@ -14,9 +14,9 @@ cache:
 env:
   global:
     - TEST_COMMAND="composer test"
-    - TEST_COMMAND_NO_TWIG="php ./vendor/bin/phpunit  --configuration phpunit.xml.dist --testsuite without_twig"
+    - TEST_COMMAND_NO_TWIG="composer test-no-twig"
     - PSALM_COMMAND="composer psalm"
-    - PSALM_COMMAND_NO_TWIG="php ./vendor/bin/psalm --config=psalm.without_twig.xml"
+    - PSALM_COMMAND_NO_TWIG="composer psalm-no-twig"
   matrix:
     - SYMFONY_VERSION=3.4.*
     - SYMFONY_VERSION=4.2.*
