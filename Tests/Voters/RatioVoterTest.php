@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -12,15 +13,18 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\RatioVoter;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class RatioVoterTest extends \PHPUnit_Framework_TestCase
+class RatioVoterTest extends TestCase
 {
-    public $stickyValues = array();
+    public $stickyValues = [];
 
-    public function testLowRatioVoterPass()
+    public function testLowRatioVoterPass(): void
     {
         $voter = $this->getRatioVoter(0.1);
         $hits = $this->executeTestIteration($voter);
@@ -28,54 +32,35 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         $this->assertLessThan(100 - $hits, $hits);
     }
 
-    public function testHighRatioVoterPass()
+    protected function getRatioVoter($ratio, $sticky = false): RatioVoter
     {
-        $voter = $this->getRatioVoter(0.9);
-        $hits = $this->executeTestIteration($voter);
+        // Create service stub
+        /** @var Session&MockObject $session */
+        $session = $this->getMockBuilder(Session::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->assertGreaterThan(100 - $hits, $hits);
-    }
+        $session->method('get')->willReturnCallback([$this, 'getStickyCallback']);
+        $session->method('has')->willReturnCallback([$this, 'hasStickyCallback']);
 
-    public function testZeroRatioVoterPass()
-    {
-        $voter = $this->getRatioVoter(0);
-        $hits = $this->executeTestIteration($voter);
+        $params = ['ratio' => $ratio, 'sticky' => $sticky];
 
-        $this->assertEquals(0, $hits);
-    }
+        $voter = new RatioVoter($session);
+        $voter->setFeature('ratiotest');
+        $voter->setParams($params);
 
-    public function testOneRatioVoterPass()
-    {
-        $voter = $this->getRatioVoter(1);
-        $hits = $this->executeTestIteration($voter);
-
-        $this->assertEquals(100, $hits);
-    }
-
-    public function testStickyRatioVoterPass()
-    {
-        $voter = $this->getRatioVoter(0.5, true);
-        $initialPass = $voter->pass();
-        $this->stickyValues = array('_ecn_featuretoggle_ratiotest' => $initialPass);
-
-        if ($initialPass) {
-            $requiredHits = $this->executeTestIteration($voter) == 100;
-        } else {
-            $requiredHits = $this->executeTestIteration($voter) == 0;
-        }
-
-        $this->assertTrue($requiredHits);
+        return $voter;
     }
 
     /**
      * Executes the tests n time returning the number of passes
      *
      * @param RatioVoter $ratioVoter
-     * @param int        $iterationCount
+     * @param int $iterationCount
      *
      * @return int
      */
-    private function executeTestIteration(RatioVoter $ratioVoter, $iterationCount = 100)
+    private function executeTestIteration(RatioVoter $ratioVoter, $iterationCount = 100): int
     {
         $hits = 0;
 
@@ -88,23 +73,43 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         return $hits;
     }
 
-    protected function getRatioVoter($ratio, $sticky = false)
+    public function testHighRatioVoterPass(): void
     {
-        // Create service stub
-        $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $voter = $this->getRatioVoter(0.9);
+        $hits = $this->executeTestIteration($voter);
 
-        $session->method('get')->will($this->returnCallback(array($this, 'getStickyCallback')));
-        $session->method('has')->will($this->returnCallback(array($this, 'hasStickyCallback')));
+        $this->assertGreaterThan(100 - $hits, $hits);
+    }
 
-        $params = array('ratio' => $ratio, 'sticky' => $sticky);
+    public function testZeroRatioVoterPass(): void
+    {
+        $voter = $this->getRatioVoter(0);
+        $hits = $this->executeTestIteration($voter);
 
-        $voter = new RatioVoter($session);
-        $voter->setFeature('ratiotest');
-        $voter->setParams($params);
+        $this->assertEquals(0, $hits);
+    }
 
-        return $voter;
+    public function testOneRatioVoterPass(): void
+    {
+        $voter = $this->getRatioVoter(1);
+        $hits = $this->executeTestIteration($voter);
+
+        $this->assertEquals(100, $hits);
+    }
+
+    public function testStickyRatioVoterPass(): void
+    {
+        $voter = $this->getRatioVoter(0.5, true);
+        $initialPass = $voter->pass();
+        $this->stickyValues = ['_ecn_featuretoggle_ratiotest' => $initialPass];
+
+        if ($initialPass) {
+            $requiredHits = $this->executeTestIteration($voter) === 100;
+        } else {
+            $requiredHits = $this->executeTestIteration($voter) === 0;
+        }
+
+        $this->assertTrue($requiredHits);
     }
 
     /**
@@ -114,7 +119,7 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
      *
      * @return bool
      */
-    public function hasStickyCallback($key)
+    public function hasStickyCallback($key): bool
     {
         return array_key_exists($key, $this->stickyValues);
     }
@@ -124,10 +129,10 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
      *
      * @param $key
      *
-     * @return null
+     * @return mixed|null
      */
     public function getStickyCallback($key)
     {
-        return array_key_exists($key, $this->stickyValues) ? $this->stickyValues[$key] : null;
+        return $this->stickyValues[$key] ?? null;
     }
 }

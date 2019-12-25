@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -11,14 +12,16 @@
 
 namespace Ecn\FeatureToggleBundle\Tests;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Ecn\FeatureToggleBundle\DependencyInjection\EcnFeatureToggleExtension;
 use Ecn\FeatureToggleBundle\EcnFeatureToggleBundle;
+use Exception;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
+class EcnFeatureToggleBundleTest extends TestCase
 {
     /**
      * @var ContainerBuilder
@@ -28,27 +31,29 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
     /**
      * Test if the default configuration for a feature
      * contains the default settings for voter and params
+     *
+     * @throws Exception
      */
-    public function testDefaultSettings()
+    public function testDefaultSettings(): void
     {
-        $this->createConfiguration(array(
-            'features' => array('testfeature' => array())
-        ));
+        $this->createConfiguration([
+            'features' => ['testfeature' => []]
+        ]);
 
         // Load feature config
         $features = $this->configuration->getParameter('features');
         $default = $this->configuration->getParameter('default');
 
-        $this->assertEquals(array('voter' => 'AlwaysTrueVoter', 'params' => array()), $default);
-        $this->assertEquals(array(), $features['testfeature']['params']);
+        $this->assertEquals(['voter' => 'AlwaysTrueVoter', 'params' => []], $default);
+        $this->assertEquals([], $features['testfeature']['params']);
     }
 
     /**
      * @param array $config
      *
-     * @return ContainerBuilder
+     * @throws Exception
      */
-    private function createConfiguration($config = array())
+    private function createConfiguration($config = []): void
     {
         $this->configuration = new ContainerBuilder();
 
@@ -56,11 +61,11 @@ class EcnFeatureToggleBundleTest extends \PHPUnit_Framework_TestCase
         $bundle->build($this->configuration);
 
         $loader = new EcnFeatureToggleExtension();
-        $loader->load(array($config), $this->configuration);
-        $this->assertTrue($this->configuration instanceof ContainerBuilder);
+        $loader->load([$config], $this->configuration);
+        $this->assertInstanceOf(ContainerBuilder::class, $this->configuration);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->configuration);
     }

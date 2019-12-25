@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -46,7 +47,7 @@ class RatioVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function setParams(array $params)
+    public function setParams(array $params): void
     {
         $this->ratio = array_key_exists('ratio', $params) ? $params['ratio'] : 0.5;
         $this->sticky = array_key_exists('sticky', $params) ? $params['sticky'] : false;
@@ -55,9 +56,9 @@ class RatioVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function pass()
+    public function pass(): bool
     {
-        if($this->sticky) {
+        if ($this->sticky) {
             $pass = $this->getStickyRatioPass();
         } else {
             $pass = $this->getRatioPass();
@@ -67,23 +68,11 @@ class RatioVoter implements VoterInterface
     }
 
     /**
-     * Check if the ratio passes
-     *
-     * @return bool
-     */
-    protected function getRatioPass()
-    {
-        $ratio = $this->ratio * 100;
-
-        return rand(0, 99) < $ratio;
-    }
-
-    /**
      * Get a persisted pass value
      *
      * @return bool
      */
-    protected function getStickyRatioPass()
+    protected function getStickyRatioPass(): bool
     {
         $sessionKey = '_ecn_featuretoggle_'.$this->feature;
         if ($this->session->has($sessionKey)) {
@@ -94,5 +83,17 @@ class RatioVoter implements VoterInterface
         }
 
         return $pass;
+    }
+
+    /**
+     * Check if the ratio passes
+     *
+     * @return bool
+     */
+    protected function getRatioPass(): bool
+    {
+        $ratio = $this->ratio * 100;
+
+        return rand(0, 99) < $ratio;
     }
 }

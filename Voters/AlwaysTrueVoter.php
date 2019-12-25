@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -21,7 +22,7 @@ class AlwaysTrueVoter implements VoterInterface
     /**
      * {@inheritdoc}
      */
-    public function pass()
+    public function pass(): bool
     {
         return true;
     }

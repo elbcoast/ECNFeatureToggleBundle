@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -13,13 +14,16 @@ namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Twig\TwigFunction;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
+class FeatureToggleExtensionTest extends TestCase
 {
-    public function testCallable()
+    public function testCallable(): void
     {
         // Define response map for service stub
         $map = [
@@ -27,14 +31,14 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
             ['unknownfeature', false]
         ];
 
-        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
-        $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
+        /** @var MockObject&FeatureService $service */
+        $service = $this->getMockBuilder(FeatureService::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $service->expects($this->any())
+        $service
             ->method('has')
-            ->will($this->returnValueMap($map));
+            ->willReturnMap($map);
 
         // Create extension
         $extension = new FeatureToggleExtension($service);
@@ -42,10 +46,10 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
         $functions = $extension->getFunctions();
 
         // Check if functions are returned as array
-        $this->assertInternalType('array', $functions);
+        $this->assertIsArray($functions);
 
         // Check if the function is a twig function
-        $this->assertInstanceOf('Twig_SimpleFunction', $functions[0]);
+        $this->assertInstanceOf(TwigFunction::class, $functions[0]);
 
         $callable = $functions[0]->getCallable();
 
@@ -55,19 +59,5 @@ class FeatureToggleExtensionTest extends \PHPUnit_Framework_TestCase
         // Check if callable returns false for an unknown feature
         $this->assertFalse($callable('unknownfeature'));
 
-    }
-
-    public function testIfExtensionHasProperName()
-    {
-
-        /** @var \PHPUnit_Framework_MockObject_MockObject|FeatureService $service */
-        $service = $this->getMockBuilder('\Ecn\FeatureToggleBundle\Service\FeatureService')
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        // Create extension
-        $extension = new FeatureToggleExtension($service);
-
-        $this->assertEquals('feature_toggle', $extension->getName());
     }
 }

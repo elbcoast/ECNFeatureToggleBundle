@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -9,19 +10,24 @@
  * file that was distributed with this source code.
  */
 
-namespace Ecn\FeatureToggleBundle\Tests\Configuration;
+namespace Ecn\FeatureToggleBundle\Tests\Service;
 
+use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
+use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class FeatureServiceTest extends \PHPUnit_Framework_TestCase
+class FeatureServiceTest extends TestCase
 {
-    public function testIfFeatureMatches()
+    /**
+     * Test new feature
+     */
+    public function testIfFeatureMatches(): void
     {
-
         // Define a feature
         $features = [
             'testfeature' => [
@@ -41,9 +47,11 @@ class FeatureServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($service->has('unknownfeature'));
     }
 
-    public function testDefaultVoter()
+    /**
+     * Test Default voter
+     */
+    public function testDefaultVoter(): void
     {
-
         // Define a feature
         $features = [
             'testfeature' => [
@@ -64,22 +72,47 @@ class FeatureServiceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test new feature
+     */
+    public function testFeatureUnknownedVoter(): void
+    {
+        $this->expectException(VoterNotFoundException::class);
+        $this->expectExceptionMessage('No voter with this alias: "testVoter" is registered');
+
+        // Define a feature
+        $features = [
+            'testfeature' => [
+                'voter' => 'testVoter',
+                'params' => []
+            ]
+        ];
+        $default = [
+            'voter' => null,
+            'params' => []
+        ];
+
+        // Create service
+        $service = new FeatureService($features, $default, $this->getRegistry());
+
+        $service->has('testfeature');
+    }
+
+    /**
      * @return VoterRegistry
      */
-    protected function getRegistry()
+    protected function getRegistry(): VoterRegistry
     {
-
         // Create alwaysTrueVoter stub
-        $alwaysTrueVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
-        $alwaysTrueVoter->expects($this->any())
+        $alwaysTrueVoter = $this->createMock(VoterInterface::class);
+        $alwaysTrueVoter
             ->method('pass')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         // Create alwaysFalseVoter stub
-        $alwaysFalseVoter = $this->getMock('\Ecn\FeatureToggleBundle\Voters\VoterInterface');
-        $alwaysFalseVoter->expects($this->any())
+        $alwaysFalseVoter = $this->createMock(VoterInterface::class);
+        $alwaysFalseVoter
             ->method('pass')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         // Create a registry with the voter stubs in it
         $registry = new VoterRegistry();

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -12,13 +13,14 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\AlwaysFalseVoter;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class AlwaysFalseVoterTest extends \PHPUnit_Framework_TestCase
+class AlwaysFalseVoterTest extends TestCase
 {
-    public function testVoterPass()
+    public function testVoterPass(): void
     {
         $voter = new AlwaysFalseVoter();
 

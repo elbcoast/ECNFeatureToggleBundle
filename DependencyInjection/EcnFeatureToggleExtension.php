@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -26,20 +27,23 @@ use Symfony\Component\DependencyInjection\Loader;
 class EcnFeatureToggleExtension extends Extension
 {
     /**
-     * {@inheritdoc}
+     * @param array            $configs
+     * @param ContainerBuilder $container
+     *
+     * @throws \Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $features = array_key_exists('features', $config) ? $config['features'] : array();
-        $default = array_key_exists('default', $config) ? $config['default'] : array();
+        $features = array_key_exists('features', $config) ? $config['features'] : [];
+        $default = array_key_exists('default', $config) ? $config['default'] : [];
 
         $container->setParameter('features', $features);
         $container->setParameter('default', $default);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
     }
 }

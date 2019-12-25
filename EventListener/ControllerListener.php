@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -12,7 +13,7 @@
 namespace Ecn\FeatureToggleBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Util\ClassUtils;
+use Doctrine\Common\Persistence\Proxy;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
@@ -46,18 +47,32 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
-     * Throws an exception when the given feature is not enabled.
-     *
      * @param FilterControllerEvent $event
+     *
+     * @psalm-suppress DeprecatedClass
+     *
+     *
+     * @throws \ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(FilterControllerEvent $event): void
     {
         // We can't resolve the controller name from non-array callables.
-        if (!is_array($controller = $event->getController())) {
+        $controller = $event->getController();
+
+        if ((!$controller instanceof \Closure)
+            && \is_object($controller)
+            && method_exists($controller, '__invoke')
+        ) {
+            $controller = [$controller, '__invoke'];
+        }
+
+        if (!\is_array($controller)) {
             return;
         }
 
-        $className = class_exists('Doctrine\Common\Util\ClassUtils') ? ClassUtils::getClass($controller[0]) : get_class($controller[0]);
+        $className = $this->getRealClass(is_object($controller[0]) ? \get_class($controller[0]) : $controller[0]);
+
+        /** @psalm-suppress ArgumentTypeCoercion */
         $object = new \ReflectionClass($className);
         $method = $object->getMethod($controller[1]);
 
@@ -69,27 +84,44 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            KernelEvents::CONTROLLER => 'onKernelController',
+        ];
+    }
+
+    /**
      * Checks for features in annotations.
      *
      * @param array $annotations
      *
      * @throws NotFoundHttpException If a feature is found, but not enabled.
      */
-    protected function checkFeature(array $annotations)
+    private function checkFeature(array $annotations): void
     {
         foreach ($annotations as $feature) {
-            if ($feature instanceof Feature) {
-                if (!$this->featureService->has($feature->name)) {
-                    throw new NotFoundHttpException();
-                }
+            if (($feature instanceof Feature) && !$this->featureService->has($feature->name)) {
+                throw new NotFoundHttpException();
             }
         }
     }
 
-    public static function getSubscribedEvents()
+    /**
+     * Gets the real class name of a class name that could be a proxy.
+     *
+     * @param string $class
+     *
+     * @return string
+     */
+    private function getRealClass(string $class): string
     {
-        return [
-            KernelEvents::CONTROLLER => 'onKernelController',
-        ];
+        if (false === $pos = strrpos($class, '\\'.Proxy::MARKER.'\\')) {
+            return $class;
+        }
+
+        return substr($class, $pos + Proxy::MARKER_LENGTH + 2);
     }
 }

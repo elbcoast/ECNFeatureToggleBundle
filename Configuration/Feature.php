@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -18,6 +19,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  *
  * @Annotation()
+ *
  * @Target({"CLASS", "METHOD"})
  */
 class Feature

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -11,31 +12,46 @@
 
 namespace Ecn\FeatureToggleBundle\Twig;
 
+use Twig\Compiler;
+use Twig\Node\Node;
+
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
+ *
+ * @psalm-suppress UndefinedClass
  */
-class FeatureToggleNode extends \Twig_Node
+class FeatureToggleNode extends Node
 {
-    public function __construct($name, \Twig_NodeInterface $feature, $lineno, $tag = null)
+    /**
+     * FeatureToggleNode constructor.
+     *
+     * @param string      $name
+     * @param Node        $feature
+     * @param int         $lineno
+     * @param string|null $tag
+     */
+    public function __construct(string $name, Node $feature, int $lineno = 0, string $tag = null)
     {
         parent::__construct(['feature' => $feature], ['name' => $name], $lineno, $tag);
     }
 
-    public function compile(\Twig_Compiler $compiler)
+    /**
+     * @param Compiler $compiler
+     */
+    public function compile(Compiler $compiler): void
     {
         $name = $this->getAttribute('name');
 
         $compiler
             ->addDebugInfo($this)
             ->write(sprintf(
-                'if ($this->env->getExtension(\'feature_toggle\')->getFeatureService()->has(\'%s\')) {',
+                'if ($this->env->getExtension(\'Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension\')->getFeatureService()->has(\'%s\')) {',
                 $name
             ))
             ->raw("\n")
             ->indent()
             ->subcompile($this->getNode('feature'))
             ->outdent()
-            ->write('}')
-        ;
+            ->write('}');
     }
 }

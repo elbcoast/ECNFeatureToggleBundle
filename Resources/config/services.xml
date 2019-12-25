@@ -4,55 +4,45 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="ecn_featuretoggle.class">Ecn\FeatureToggleBundle\Service\FeatureService</parameter>
-        <parameter key="ecn_featuretoggle.voter_registry.class">Ecn\FeatureToggleBundle\Voters\VoterRegistry</parameter>
-        <parameter key="ecn_featuretoggle.voter_alwaystrue.class">Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter</parameter>
-        <parameter key="ecn_featuretoggle.voter_alwaysfalse.class">Ecn\FeatureToggleBundle\Voters\AlwaysFalseVoter</parameter>
-        <parameter key="ecn_featuretoggle.voter_ratio.class">Ecn\FeatureToggleBundle\Voters\RatioVoter</parameter>
-        <parameter key="ecn_featuretoggle.voter_schedule.class">Ecn\FeatureToggleBundle\Voters\ScheduleVoter</parameter>
-        <parameter key="ecn_featuretoggle.voter_request_header.class">Ecn\FeatureToggleBundle\Voters\RequestHeaderVoter</parameter>
-        <parameter key="ecn_featuretoggle.twig.class">Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension</parameter>
-        <parameter key="ecn_featuretoggle.controller_listener.class">Ecn\FeatureToggleBundle\EventListener\ControllerListener</parameter>
-    </parameters>
-
     <services>
+        <defaults public="false" />
 
         <!-- FeatureService -->
-        <service id="ecn_featuretoggle" class="%ecn_featuretoggle.class%">
+        <service id="ecn_featuretoggle" class="Ecn\FeatureToggleBundle\Service\FeatureService">
             <argument>%features%</argument>
             <argument>%default%</argument>
             <argument type="service" id="ecn_featuretoggle.voter_registry"/>
         </service>
         <service id="feature" alias="ecn_featuretoggle"/>
 
+
         <!-- Voter Registry -->
-        <service id="ecn_featuretoggle.voter_registry" class="%ecn_featuretoggle.voter_registry.class%">
+        <service id="ecn_featuretoggle.voter_registry" class="Ecn\FeatureToggleBundle\Voters\VoterRegistry">
         </service>
 
         <!-- AlwaysTrue Voter -->
-        <service id="ecn_featuretoggle.voter_alwaystrue" class="%ecn_featuretoggle.voter_alwaystrue.class%">
+        <service id="ecn_featuretoggle.voter_alwaystrue" class="Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter">
             <tag name="ecn_featuretoggle.voter" alias="AlwaysTrueVoter"/>
         </service>
 
         <!-- AlwaysFalse Voter -->
-        <service id="ecn_featuretoggle.voter_alwaysfalse" class="%ecn_featuretoggle.voter_alwaysfalse.class%">
+        <service id="ecn_featuretoggle.voter_alwaysfalse" class="Ecn\FeatureToggleBundle\Voters\AlwaysFalseVoter">
             <tag name="ecn_featuretoggle.voter" alias="AlwaysFalseVoter"/>
         </service>
 
         <!-- Ratio Voter -->
-        <service id="ecn_featuretoggle.voter_ratio" class="%ecn_featuretoggle.voter_ratio.class%">
+        <service id="ecn_featuretoggle.voter_ratio" class="Ecn\FeatureToggleBundle\Voters\RatioVoter">
             <argument type="service" id="session"/>
             <tag name="ecn_featuretoggle.voter" alias="RatioVoter"/>
         </service>
 
         <!-- Schedule Voter -->
-        <service id="ecn_featuretoggle.voter_schedule" class="%ecn_featuretoggle.voter_schedule.class%">
+        <service id="ecn_featuretoggle.voter_schedule" class="Ecn\FeatureToggleBundle\Voters\ScheduleVoter">
             <tag name="ecn_featuretoggle.voter" alias="ScheduleVoter"/>
         </service>
 
         <!-- Request Header Voter -->
-        <service id="ecn_featuretoggle.voter_request_header" class="%ecn_featuretoggle.voter_request_header.class%">
+        <service id="ecn_featuretoggle.voter_request_header" class="Ecn\FeatureToggleBundle\Voters\RequestHeaderVoter">
             <call method="setRequest">
                 <argument id="request_stack" type="service"/>
             </call>
@@ -60,18 +50,16 @@
         </service>
 
         <!-- Twig extension for feature toggle -->
-        <service id="ecn_featuretoggle.twig" class="%ecn_featuretoggle.twig.class%">
+        <service id="ecn_featuretoggle.twig" class="Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension">
             <argument type="service" id="ecn_featuretoggle"/>
             <tag name="twig.extension"/>
         </service>
 
         <!-- Controller Annotation listener -->
-        <service id="ecn_featuretoggl.controller.listener" class="%ecn_featuretoggle.controller_listener.class%">
+        <service id="ecn_featuretoggl.controller.listener" class="Ecn\FeatureToggleBundle\EventListener\ControllerListener">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="annotation_reader" />
             <argument type="service" id="feature" />
         </service>
-
     </services>
-
 </container>

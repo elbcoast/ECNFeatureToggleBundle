@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -11,6 +12,7 @@
 
 namespace Ecn\FeatureToggleBundle\Service;
 
+use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 
@@ -27,7 +29,7 @@ class FeatureService
     protected $features;
 
     /**
-     * @var string
+     * @var array
      */
     protected $defaultVoter;
 
@@ -36,13 +38,14 @@ class FeatureService
      */
     protected $voterRegistry;
 
-
     /**
-     * @param               $features
-     * @param $defaultVoter
+     * FeatureService constructor
+     *
+     * @param array         $features
+     * @param array         $defaultVoter
      * @param VoterRegistry $voterRegistry
      */
-    public function __construct($features, $defaultVoter, VoterRegistry $voterRegistry)
+    public function __construct(array $features, array $defaultVoter, VoterRegistry $voterRegistry)
     {
         $this->features = $features;
         $this->voterRegistry = $voterRegistry;
@@ -52,37 +55,44 @@ class FeatureService
     /**
      * Check if a feature is enabled
      *
-     * @param $feature
+     * @param string $feature
      *
      * @return bool
+     *
+     * @throws VoterNotFoundException
      */
-    public function has($feature)
+    public function has(string $feature): bool
     {
         if (!array_key_exists($feature, $this->features)) {
             return false;
         }
 
-        $voter = $this->initVoter($feature);
+        try {
+            $voter = $this->initVoter($feature);
 
-        return $voter->pass();
+            return $voter->pass();
+        } catch (VoterNotFoundException $exception) {
+            throw $exception;
+        }
     }
 
     /**
      * Initializes a voter for a specific feature
      *
-     * @param $feature
+     * @param string $feature
      *
-     * @return VoterInterface|null
+     * @return VoterInterface
      */
-    protected function initVoter($feature)
+    protected function initVoter(string $feature): VoterInterface
     {
         $featureDefinition = $this->features[$feature];
 
-        $voterName = $featureDefinition['voter'] ? $featureDefinition['voter'] : $this->defaultVoter['voter'];
+        $voterName = $featureDefinition['voter'] ?: $this->defaultVoter['voter'];
         $voter = $this->voterRegistry->getVoter($voterName);
 
+
         $defaultParams = $this->defaultVoter['params'];
-        $params = $featureDefinition['params'] ? $featureDefinition['params'] : $defaultParams;
+        $params = $featureDefinition['params'] ?: $defaultParams;
 
         $voter->setFeature($feature);
         $voter->setParams($params);
