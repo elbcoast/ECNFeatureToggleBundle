@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Ecn\FeatureToggleBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Persistence\Proxy;
+use \Doctrine\Persistence\Proxy;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
