@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
             $rootNode = $treeBuilder->getRootNode();
         } else {
             /** @psalm-suppress UndefinedMethod */
+            /** @psalm-suppress DeprecatedMethod */
             $rootNode = $treeBuilder->root('ecn_feature_toggle');
         }
 
