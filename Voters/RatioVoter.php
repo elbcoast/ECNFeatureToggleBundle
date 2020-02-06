@@ -11,6 +11,7 @@
 
 namespace Ecn\FeatureToggleBundle\Voters;
 
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -36,9 +37,9 @@ class RatioVoter implements VoterInterface
     protected $sticky = false;
 
     /**
-     * @param SessionInterface $session
+     * @param SessionInterface|null $session
      */
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session = null)
     {
         $this->session = $session;
     }
@@ -85,7 +86,12 @@ class RatioVoter implements VoterInterface
      */
     protected function getStickyRatioPass()
     {
+        if (null === $this->session) {
+            throw new InvalidArgumentException('The service '.get_class($this).' has a dependency on the session');
+        }
+
         $sessionKey = '_ecn_featuretoggle_'.$this->feature;
+
         if ($this->session->has($sessionKey)) {
             $pass = $this->session->get($sessionKey);
         } else {

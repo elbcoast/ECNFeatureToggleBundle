@@ -12,6 +12,8 @@
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use Ecn\FeatureToggleBundle\Voters\RatioVoter;
+use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
@@ -20,36 +22,69 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
 {
     public $stickyValues = array();
 
-    public function testLowRatioVoterPass()
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param bool $hasSession
+     */
+    public function testLowRatioVoterPass($hasSession)
     {
-        $voter = $this->getRatioVoter(0.1);
+        $voter = $this->getRatioVoter(0.1, false, $hasSession);
         $hits = $this->executeTestIteration($voter);
 
         $this->assertLessThan(100 - $hits, $hits);
     }
 
-    public function testHighRatioVoterPass()
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param bool $hasSession
+     */
+    public function testHighRatioVoterPass($hasSession)
     {
-        $voter = $this->getRatioVoter(0.9);
+        $voter = $this->getRatioVoter(0.9, false, $hasSession);
         $hits = $this->executeTestIteration($voter);
 
         $this->assertGreaterThan(100 - $hits, $hits);
     }
 
-    public function testZeroRatioVoterPass()
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param bool $hasSession
+     */
+    public function testZeroRatioVoterPass($hasSession)
     {
-        $voter = $this->getRatioVoter(0);
+        $voter = $this->getRatioVoter(0, false, $hasSession);
         $hits = $this->executeTestIteration($voter);
 
         $this->assertEquals(0, $hits);
     }
 
-    public function testOneRatioVoterPass()
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param bool $hasSession
+     */
+    public function testOneRatioVoterPass($hasSession)
     {
-        $voter = $this->getRatioVoter(1);
+        $voter = $this->getRatioVoter(1, false, $hasSession);
         $hits = $this->executeTestIteration($voter);
 
         $this->assertEquals(100, $hits);
+    }
+
+    /**
+     * Simple data provider for $hasSession
+     *
+     * @return array
+     */
+    public function dataProvider()
+    {
+        return [
+            [true],
+            [false],
+        ];
     }
 
     public function testStickyRatioVoterPass()
@@ -65,6 +100,15 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertTrue($requiredHits);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testStickyRatioVoterPassOnNullSession()
+    {
+        $voter = $this->getRatioVoter(0.5, true, false);
+        $voter->pass();
     }
 
     /**
@@ -88,15 +132,19 @@ class RatioVoterTest extends \PHPUnit_Framework_TestCase
         return $hits;
     }
 
-    protected function getRatioVoter($ratio, $sticky = false)
+    protected function getRatioVoter($ratio, $sticky = false, $hasSession = true)
     {
-        // Create service stub
-        $session = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Session\Session')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $session = null;
 
-        $session->method('get')->will($this->returnCallback(array($this, 'getStickyCallback')));
-        $session->method('has')->will($this->returnCallback(array($this, 'hasStickyCallback')));
+        if ($hasSession) {
+             // Create service stub
+             $session = $this->getMockBuilder(SessionInterface::class)
+                ->disableOriginalConstructor()
+                ->getMock();
+
+             $session->method('get')->will($this->returnCallback(array($this, 'getStickyCallback')));
+             $session->method('has')->will($this->returnCallback(array($this, 'hasStickyCallback')));
+        }
 
         $params = array('ratio' => $ratio, 'sticky' => $sticky);
 
