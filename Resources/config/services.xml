@@ -32,7 +32,7 @@
 
         <!-- Ratio Voter -->
         <service id="ecn_featuretoggle.voter_ratio" class="Ecn\FeatureToggleBundle\Voters\RatioVoter">
-            <argument type="service" id="session"/>
+            <argument type="service" id="session" on-invalid="null"/>
             <tag name="ecn_featuretoggle.voter" alias="RatioVoter"/>
         </service>
 
