@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Ecn\FeatureToggleBundle\Tests\Voters;
 
 use DateTime;
+use DateTimeInterface;
 use Ecn\FeatureToggleBundle\Voters\ScheduleVoter;
 use PHPUnit\Framework\TestCase;
 
@@ -23,12 +24,12 @@ class ScheduleVoterTest extends TestCase
 {
     public function testNoScheduleIsSet(): void
     {
-        $voter = $this->getScheduleVoter(null);
+        $voter = $this->getScheduleVoter('');
 
         $this->assertTrue($voter->pass());
     }
 
-    protected function getScheduleVoter($schedule): ScheduleVoter
+    protected function getScheduleVoter(string $schedule): ScheduleVoter
     {
         $voter = new ScheduleVoter();
         $voter->setParams(['schedule' => $schedule]);
@@ -45,14 +46,14 @@ class ScheduleVoterTest extends TestCase
 
     public function testEarlierScheduleIsSet(): void
     {
-        $voter = $this->getScheduleVoter((new DateTime())->modify('-1 second')->format(DateTime::RSS));
+        $voter = $this->getScheduleVoter((new DateTime())->modify('-1 second')->format(DateTimeInterface::RSS));
 
         $this->assertTrue($voter->pass());
     }
 
     public function testLaterScheduleIsSet(): void
     {
-        $voter = $this->getScheduleVoter((new DateTime())->modify('+1 second')->format(DateTime::RSS));
+        $voter = $this->getScheduleVoter((new DateTime())->modify('+1 second')->format(DateTimeInterface::RSS));
 
         $this->assertFalse($voter->pass());
     }

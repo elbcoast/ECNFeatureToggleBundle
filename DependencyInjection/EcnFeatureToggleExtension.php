@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\DependencyInjection;
 
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -30,15 +31,15 @@ class EcnFeatureToggleExtension extends Extension
      * @param array            $configs
      * @param ContainerBuilder $container
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $features = array_key_exists('features', $config) ? $config['features'] : [];
-        $default = array_key_exists('default', $config) ? $config['default'] : [];
+        $features = $config['features'] ?? [];
+        $default = $config['default'] ?? [];
 
         $container->setParameter('features', $features);
         $container->setParameter('default', $default);

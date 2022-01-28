@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\Tests\EventListener;
 
-use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\EventListener\ControllerListener;
@@ -24,12 +23,10 @@ use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtIn
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtMethod;
 use Ecn\FeatureToggleBundle\Tests\EventListener\Fixture\FooControllerFeatureAtStaticMethod;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
-use PHPUnit\Framework\MockObject\MockBuilder;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
@@ -43,25 +40,20 @@ class ControllerListenerTest extends TestCase
     /**
      * @var ControllerListener
      */
-    private $listener;
+    private ControllerListener $listener;
 
     /**
      * @var Request
      */
-    private $request;
+    private Request $request;
 
     /**
-     * @var FilterControllerEvent
+     * @var ControllerEvent
      */
-    private $event;
+    private ControllerEvent $event;
 
     /**
-     * @var FeatureService&MockObject
-     */
-    private $mockListener;
-
-    /**
-     * Set up tests
+     * Set up Tests
      */
     public function setUp(): void
     {
@@ -71,7 +63,7 @@ class ControllerListenerTest extends TestCase
         );
         $this->request = $this->createRequest();
 
-        // trigger the autoloading of the @Feature annotation
+        // trigger to autoload the @Feature annotation
         class_exists(Feature::class);
     }
 
@@ -85,8 +77,8 @@ class ControllerListenerTest extends TestCase
 
     public function tearDown(): void
     {
-        $this->listener = null;
-        $this->request = null;
+        $this->listener = new ControllerListener(new AnnotationReader(), new FeatureService([], [], new VoterRegistry()));
+        $this->request = new Request([], [], []);
     }
 
     /**
@@ -100,7 +92,7 @@ class ControllerListenerTest extends TestCase
 
         $controller = new FooControllerFeatureAtMethod();
 
-        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+        $this->event = $this->getControllerEvent([$controller, 'barAction'], $this->request);
 
         $this->listener->onKernelController($this->event);
     }
@@ -116,23 +108,23 @@ class ControllerListenerTest extends TestCase
 
         $controller = new FooControllerFeatureAtStaticMethod();
 
-        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+        $this->event = $this->getControllerEvent([$controller, 'barAction'], $this->request);
 
         $this->listener->onKernelController($this->event);
     }
 
     /**
-     * @param         $controller
-     * @param Request $request
+     * @param object|array|string $controller
+     * @param Request               $request
      *
-     * @return FilterControllerEvent
+     * @return ControllerEvent
      */
-    protected function getFilterControllerEvent($controller, Request $request): FilterControllerEvent
+    protected function getControllerEvent(object|array|string $controller, Request $request): ControllerEvent
     {
-        /** @var Kernel|MockBuilder $mockKernel */
-        $mockKernel = $this->getMockForAbstractClass(Kernel::class, ['', '']);
+        /** @var Kernel $mockKernel */
+        $mockKernel = $this->getMockForAbstractClass(HttpKernelInterface::class);
 
-        return new FilterControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MASTER_REQUEST);
+        return new ControllerEvent($mockKernel, $controller, $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
     /**
@@ -145,7 +137,7 @@ class ControllerListenerTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $controller = new FooControllerFeatureAtClass();
-        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+        $this->event = $this->getControllerEvent([$controller, 'barAction'], $this->request);
 
         $this->listener->onKernelController($this->event);
     }
@@ -160,7 +152,7 @@ class ControllerListenerTest extends TestCase
         $this->expectException(NotFoundHttpException::class);
 
         $controller = new FooControllerFeatureAtClassAndMethod();
-        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+        $this->event = $this->getControllerEvent([$controller, 'barAction'], $this->request);
 
         $this->listener->onKernelController($this->event);
     }
@@ -176,7 +168,7 @@ class ControllerListenerTest extends TestCase
 
         $controller = new FooControllerFeatureAtInvoke();
 
-        $this->event = $this->getFilterControllerEvent($controller, $this->request);
+        $this->event = $this->getControllerEvent($controller, $this->request);
 
         $this->listener->onKernelController($this->event);
     }
@@ -192,33 +184,9 @@ class ControllerListenerTest extends TestCase
 
         $controller = new ProxyFooControllerFeatureAtClass();
 
-        $this->event = $this->getFilterControllerEvent([$controller, 'barAction'], $this->request);
+        $this->event = $this->getControllerEvent([$controller, 'barAction'], $this->request);
 
         $this->listener->onKernelController($this->event);
-    }
-
-    /**
-     * @param callable $controller
-     *
-     * @throws ReflectionException
-     * @throws AnnotationException
-     *
-     * @dataProvider callableDataProvider
-     */
-    public function testAvoidClosure(callable $controller): void
-    {
-        /** @var FeatureService&MockObject $featureService */
-        $featureService = $this->createMock(FeatureService::class);
-        $featureService->expects($this->never())->method('has');
-
-        $listener = new ControllerListener(
-            new AnnotationReader(),
-            $featureService
-        );
-
-        $event = $this->getFilterControllerEvent($controller, $this->request);
-
-        $listener->onKernelController($event);
     }
 
     /**

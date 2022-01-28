@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\EventListener;
 
+use Closure;
 use Doctrine\Common\Annotations\Reader;
-use \Doctrine\Persistence\Proxy;
+use Doctrine\Persistence\Proxy;
 use Ecn\FeatureToggleBundle\Configuration\Feature;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use JetBrains\PhpStorm\ArrayShape;
+use ReflectionClass;
+use ReflectionException;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -29,12 +33,12 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * @var Reader
      */
-    protected $reader;
+    protected Reader $reader;
 
     /**
      * @var FeatureService
      */
-    protected $featureService;
+    protected FeatureService $featureService;
 
     /**
      * @param Reader         $reader
@@ -47,33 +51,30 @@ class ControllerListener implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      *
-     * @psalm-suppress DeprecatedClass
-     *
-     *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event): void
+    public function onKernelController(ControllerEvent $event): void
     {
         // We can't resolve the controller name from non-array callables.
         $controller = $event->getController();
 
-        if ((!$controller instanceof \Closure)
-            && \is_object($controller)
+        if ((!$controller instanceof Closure)
+            && is_object($controller)
             && method_exists($controller, '__invoke')
         ) {
             $controller = [$controller, '__invoke'];
         }
 
-        if (!\is_array($controller)) {
+        if (!is_array($controller)) {
             return;
         }
 
-        $className = $this->getRealClass(is_object($controller[0]) ? \get_class($controller[0]) : $controller[0]);
+        /** @var class-string $className */
+        $className = $this->getRealClass(is_object($controller[0]) ? get_class($controller[0]) : $controller[0]);
 
-        /** @psalm-suppress ArgumentTypeCoercion */
-        $object = new \ReflectionClass($className);
+        $object = new ReflectionClass($className);
         $method = $object->getMethod($controller[1]);
 
         $controllerAnnotations = $this->reader->getClassAnnotations($object);
@@ -86,6 +87,7 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
+    #[ArrayShape([KernelEvents::CONTROLLER => "string"])]
     public static function getSubscribedEvents(): array
     {
         return [

@@ -25,17 +25,17 @@ class RatioVoter implements VoterInterface
     /**
      * @var SessionInterface|null
      */
-    protected $session;
+    protected ?SessionInterface $session;
 
     /**
      * @var float
      */
-    protected $ratio = 0.5;
+    protected float $ratio = 0.5;
 
     /**
      * @var bool
      */
-    protected $sticky = false;
+    protected bool $sticky = false;
 
     /**
      * @param SessionInterface|null $session
@@ -50,8 +50,8 @@ class RatioVoter implements VoterInterface
      */
     public function setParams(array $params): void
     {
-        $this->ratio = array_key_exists('ratio', $params) ? $params['ratio'] : 0.5;
-        $this->sticky = array_key_exists('sticky', $params) ? $params['sticky'] : false;
+        $this->ratio = $params['ratio'] ?? 0.5;
+        $this->sticky = $params['sticky'] ?? false;
     }
 
     /**

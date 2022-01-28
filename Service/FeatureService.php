@@ -26,17 +26,17 @@ class FeatureService
      *
      * @var array
      */
-    protected $features;
+    protected array $features;
 
     /**
      * @var array
      */
-    protected $defaultVoter;
+    protected array $defaultVoter;
 
     /**
      * @var VoterRegistry
      */
-    protected $voterRegistry;
+    protected VoterRegistry $voterRegistry;
 
     /**
      * FeatureService constructor
@@ -63,17 +63,11 @@ class FeatureService
      */
     public function has(string $feature): bool
     {
-        if (!array_key_exists($feature, $this->features)) {
+        if (!isset($this->features[$feature])) {
             return false;
         }
 
-        try {
-            $voter = $this->initVoter($feature);
-
-            return $voter->pass();
-        } catch (VoterNotFoundException $exception) {
-            throw $exception;
-        }
+        return $this->initVoter($feature)->pass();
     }
 
     /**

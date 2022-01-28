@@ -9,8 +9,8 @@
 
 In order to install ECNFeatureToggleBundle, you need at least
 
-- PHP 7.2 or greater
-- Symfony 3.4, Symfony 4.2 or greater
+- PHP 8.0 or greater
+- Symfony 5.4 or greater
 
 ## Installation
 

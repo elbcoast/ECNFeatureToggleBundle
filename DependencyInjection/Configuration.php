@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -26,24 +27,18 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritdoc}
-     *
-     * @psalm-suppress PossiblyNullReference
-     * @psalm-suppress PossiblyUndefinedMethod
-     * @psalm-suppress RedundantCondition
-     * @psalm-suppress UndefinedMethod
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('ecn_feature_toggle');
 
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            /** @psalm-suppress UndefinedMethod */
-            /** @psalm-suppress DeprecatedMethod */
-            $rootNode = $treeBuilder->root('ecn_feature_toggle');
-        }
+        /** @var ArrayNodeDefinition $rootNode */
+        $rootNode = $treeBuilder->getRootNode();
 
+        /**
+         * @psalm-suppress PossiblyNullReference
+         * @psalm-suppress PossiblyUndefinedMethod
+         */
         $rootNode
             ->children()
                 ->arrayNode('default')

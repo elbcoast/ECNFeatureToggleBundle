@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\Exception;
 
+use RuntimeException;
+
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
  */
-class VoterNotFoundException extends \RuntimeException
+class VoterNotFoundException extends RuntimeException
 {
 }

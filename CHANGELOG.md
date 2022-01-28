@@ -1,6 +1,23 @@
 # Change Log
 
 
+## 3.0.0 - 2022-02-01
+
+### Added
+
+- Symfony 5 and 6 support
+- PHP 8 Coding Style
+
+### Changed
+
+- ControllerFilterEvent to ControllerEvent
+
+### Removed
+
+- Removed PHP 7 support
+- Removed Symfony 3 and 4 support
+- Removed Twig artefacts
+
 ## 2.0.0 - 2019-12-25
 
 ### Added

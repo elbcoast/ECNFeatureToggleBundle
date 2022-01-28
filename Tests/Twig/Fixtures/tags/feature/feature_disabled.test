@@ -1,9 +1,0 @@
---TEST--
-"feature" tag shows content when the feature is present and enabled
---TEMPLATE--
-{% feature invalid_feature %}
-feature content
-{% endfeature %}
---DATA--
-return []
---EXPECT--

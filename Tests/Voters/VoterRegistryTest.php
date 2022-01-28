@@ -49,6 +49,7 @@ class VoterRegistryTest extends TestCase
         $registry = new VoterRegistry();
         $registry->addVoter($voterOne, 'myFirstTestVoter');
 
-        $unknownVoter = $registry->getVoter('unknownVoter');
+        // unknownVoter should throw VoterNotFoundException
+        $registry->getVoter('unknownVoter');
     }
 }
