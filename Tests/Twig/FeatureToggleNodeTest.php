@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Twig\FeatureToggleNode;
+use Twig\Environment;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
@@ -25,15 +26,17 @@ class FeatureToggleNodeTest extends NodeTestCase
 {
     /**
      * @dataProvider getTests
+     *
+     * @param FeatureToggleNode $node
+     * @param string $source
+     * @param Environment $environment
+     * @param bool $isPattern
      */
     public function testCompile($node, $source, $environment = null, $isPattern = false)
     {
         parent::testCompile($node, $source, $environment = null, $isPattern = false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getTests(): array
     {
         $tests = [];

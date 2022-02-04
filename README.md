@@ -9,8 +9,8 @@
 
 In order to install ECNFeatureToggleBundle, you need at least
 
-- PHP 7.2 or greater
-- Symfony 3.4, Symfony 4.2 or greater
+- PHP 8.0 or greater
+- Symfony 5.4 or greater
 
 ## Installation
 
@@ -19,6 +19,11 @@ In order to install ECNFeatureToggleBundle, you need at least
 
 ```bash
 $ composer require ecn/featuretoggle-bundle
+```
+
+Functionality of twig is only optional. Require it to your composer if you need it to use it.
+```bash
+$ composer require twig/twig
 ```
 
 
@@ -105,12 +110,12 @@ if ($this->get('feature')->has('MyNewFeature')) {
 
 ## Voters
 
-In order to decide if a feature is available or not, voters are being used. Currently there are five voters included.
+In order to decide if a feature is available or not, voters are being used. Currently, there are five voters included.
 
 
 ### AlwaysTrueVoter
 
-This is the default voter and it will always pass. So if you have a feature defined, it will always be displayed.
+This is the default voter, and it will always pass. So if you have a feature defined, it will always be displayed.
 
 The full configuration for using this voter looks like this:
 
@@ -143,7 +148,7 @@ This voter passes on a given ratio between 0 and 1, which makes it suitable for 
 The higher the ratio, the more likely the voter will pass. A value of 1 will make it pass every time, 0 will make it
 never pass.
 
-Additionally, the result of the first check can be bound to the users session. This is useful if you need a feature
+Additionally, the result of the first check can be bound to the users' session. This is useful if you need a feature
 to be persistent across multiple requests. To enable this, just set `sticky` to `true`.
 
 If you want to use this voter, this is the full configuration:

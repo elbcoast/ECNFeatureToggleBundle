@@ -2,13 +2,11 @@
 
 namespace Ecn\FeatureToggleBundle\Tests\EventListener\Fixture;
 
-use Ecn\FeatureToggleBundle\Configuration\Feature;
+use Ecn\FeatureToggleBundle\Attributes\Feature;
 
 class FooControllerFeatureAtMethod
 {
-    /**
-     * @Feature("feature")
-     */
+    #[Feature(name: 'feature')]
     public function barAction()
     {
     }

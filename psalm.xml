@@ -2,7 +2,6 @@
 <psalm
     name="EcnFeatureToggleBundle"
     useDocblockTypes="true"
-    totallyTyped="false"
 >
     <projectFiles>
         <directory name="./" />
@@ -22,7 +21,6 @@
         <MissingReturnType errorLevel="info" />
         <MissingPropertyType errorLevel="info" />
         <InvalidDocblock errorLevel="info" />
-        <MisplacedRequiredParam errorLevel="info" />
 
         <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />

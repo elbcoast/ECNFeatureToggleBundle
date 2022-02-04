@@ -23,10 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class EcnFeatureToggleBundleTest extends TestCase
 {
-    /**
-     * @var ContainerBuilder
-     */
-    private $configuration;
+    private ContainerBuilder $configuration;
 
     /**
      * Test if the default configuration for a feature
@@ -37,7 +34,7 @@ class EcnFeatureToggleBundleTest extends TestCase
     public function testDefaultSettings(): void
     {
         $this->createConfiguration([
-            'features' => ['testfeature' => []]
+            'features' => ['testFeature' => []]
         ]);
 
         // Load feature config
@@ -45,15 +42,13 @@ class EcnFeatureToggleBundleTest extends TestCase
         $default = $this->configuration->getParameter('default');
 
         $this->assertEquals(['voter' => 'AlwaysTrueVoter', 'params' => []], $default);
-        $this->assertEquals([], $features['testfeature']['params']);
+        $this->assertEquals([], $features['testFeature']['params']);
     }
 
     /**
-     * @param array $config
-     *
      * @throws Exception
      */
-    private function createConfiguration($config = []): void
+    private function createConfiguration(array $config = []): void
     {
         $this->configuration = new ContainerBuilder();
 

@@ -12,72 +12,63 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\EventListener;
 
-use Doctrine\Common\Annotations\Reader;
-use \Doctrine\Persistence\Proxy;
-use Ecn\FeatureToggleBundle\Configuration\Feature;
+use Closure;
+use Doctrine\Persistence\Proxy;
+use Ecn\FeatureToggleBundle\Attributes\Feature;
 use Ecn\FeatureToggleBundle\Service\FeatureService;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use JetBrains\PhpStorm\ArrayShape;
+use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionException;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
  */
 class ControllerListener implements EventSubscriberInterface
 {
-    /**
-     * @var Reader
-     */
-    protected $reader;
+    protected FeatureService $featureService;
 
     /**
-     * @var FeatureService
-     */
-    protected $featureService;
-
-    /**
-     * @param Reader         $reader
      * @param FeatureService $featureService
      */
-    public function __construct(Reader $reader, FeatureService $featureService)
+    public function __construct(FeatureService $featureService)
     {
-        $this->reader = $reader;
         $this->featureService = $featureService;
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      *
-     * @psalm-suppress DeprecatedClass
-     *
-     *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event): void
+    public function onKernelController(ControllerEvent $event): void
     {
         // We can't resolve the controller name from non-array callables.
         $controller = $event->getController();
 
-        if ((!$controller instanceof \Closure)
-            && \is_object($controller)
+        if ((!$controller instanceof Closure)
+            && is_object($controller)
             && method_exists($controller, '__invoke')
         ) {
             $controller = [$controller, '__invoke'];
         }
 
-        if (!\is_array($controller)) {
+        if (!is_array($controller)) {
             return;
         }
 
-        $className = $this->getRealClass(is_object($controller[0]) ? \get_class($controller[0]) : $controller[0]);
+        /** @var class-string */
+        $className = $this->getRealClass(is_object($controller[0]) ? $controller[0]::class : $controller[0]);
 
-        /** @psalm-suppress ArgumentTypeCoercion */
-        $object = new \ReflectionClass($className);
+        $object = new ReflectionClass($className);
         $method = $object->getMethod($controller[1]);
 
-        $controllerAnnotations = $this->reader->getClassAnnotations($object);
-        $actionAnnotations = $this->reader->getMethodAnnotations($method);
+        $controllerAnnotations = $object->getAttributes();
+        $actionAnnotations = $method->getAttributes();
 
         $this->checkFeature($controllerAnnotations);
         $this->checkFeature($actionAnnotations);
@@ -86,6 +77,7 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * {@inheritDoc}
      */
+    #[ArrayShape([KernelEvents::CONTROLLER => "string"])]
     public static function getSubscribedEvents(): array
     {
         return [
@@ -96,14 +88,16 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * Checks for features in annotations.
      *
-     * @param array $annotations
+     * @param array $attributes
      *
      * @throws NotFoundHttpException If a feature is found, but not enabled.
      */
-    private function checkFeature(array $annotations): void
+    private function checkFeature(array $attributes): void
     {
-        foreach ($annotations as $feature) {
-            if (($feature instanceof Feature) && !$this->featureService->has($feature->name)) {
+        /** @var ReflectionAttribute $feature */
+        foreach ($attributes as $feature) {
+            $featureInstance = $feature->newInstance();
+            if (($featureInstance instanceof Feature) && !$this->featureService->has($featureInstance->name)) {
                 throw new NotFoundHttpException();
             }
         }
