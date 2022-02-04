@@ -34,12 +34,12 @@ class RequestHeaderVoterTest extends TestCase
 
     public function testNoCurrentRequestInRequestStack(): void
     {
-        $voter = $this->getRequestHeaderVoter(new RequestStack(), null);
+        $voter = $this->getRequestHeaderVoter(new RequestStack(), []);
 
         $this->assertFalse($voter->pass());
     }
 
-    private function getRequestHeaderVoter(RequestStack $requestStack, $requestHeaders = null): RequestHeaderVoter
+    private function getRequestHeaderVoter(RequestStack $requestStack, array $requestHeaders = []): RequestHeaderVoter
     {
         $voter = new RequestHeaderVoter();
         $voter->setRequest($requestStack);
@@ -50,14 +50,14 @@ class RequestHeaderVoterTest extends TestCase
 
     public function testNoRequestHeadersProvided(): void
     {
-        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack(), null);
+        $voter = $this->getRequestHeaderVoter($this->getFakeRequestStack(), []);
 
         $this->assertFalse($voter->pass());
     }
 
-    private function getFakeRequestStack($headers = []): RequestStack
+    private function getFakeRequestStack(array $headers = []): RequestStack
     {
-        $fakeRequest = Request::create('/', 'GET');
+        $fakeRequest = Request::create('/');
         $fakeRequest->headers->add($headers);
 
         $requestStack = new RequestStack();

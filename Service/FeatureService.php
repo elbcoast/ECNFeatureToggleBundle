@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Ecn\FeatureToggleBundle\Service;
 
-use Ecn\FeatureToggleBundle\Exception\VoterNotFoundException;
 use Ecn\FeatureToggleBundle\Voters\VoterInterface;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 
@@ -23,20 +22,11 @@ class FeatureService
 {
     /**
      * Contains the defined features
-     *
-     * @var array
      */
-    protected $features;
+    protected array $features;
 
-    /**
-     * @var array
-     */
-    protected $defaultVoter;
-
-    /**
-     * @var VoterRegistry
-     */
-    protected $voterRegistry;
+    protected array $defaultVoter;
+    protected VoterRegistry $voterRegistry;
 
     /**
      * FeatureService constructor
@@ -58,22 +48,14 @@ class FeatureService
      * @param string $feature
      *
      * @return bool
-     *
-     * @throws VoterNotFoundException
      */
     public function has(string $feature): bool
     {
-        if (!array_key_exists($feature, $this->features)) {
+        if (!isset($this->features[$feature])) {
             return false;
         }
 
-        try {
-            $voter = $this->initVoter($feature);
-
-            return $voter->pass();
-        } catch (VoterNotFoundException $exception) {
-            throw $exception;
-        }
+        return $this->initVoter($feature)->pass();
     }
 
     /**

@@ -22,7 +22,7 @@ class VoterRegistry
     /**
      * @var array<string, VoterInterface>
      */
-    private $voters = [];
+    private array $voters = [];
 
     /**
      * @param VoterInterface $voter The voter service to add
@@ -44,7 +44,7 @@ class VoterRegistry
      */
     public function getVoter(string $alias): VoterInterface
     {
-        if (array_key_exists($alias, $this->voters)) {
+        if (isset($this->voters[$alias])) {
             return $this->voters[$alias];
         }
 

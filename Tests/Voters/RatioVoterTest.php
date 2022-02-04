@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class RatioVoterTest extends TestCase
 {
-    public $stickyValues = [];
+    public array $stickyValues = [];
 
     public function testLowRatioVoterPass(): void
     {
@@ -98,7 +98,7 @@ class RatioVoterTest extends TestCase
     {
         $voter = $this->getRatioVoter(0.5, true);
         $initialPass = $voter->pass();
-        $this->stickyValues = ['_ecn_featuretoggle_ratiotest' => $initialPass];
+        $this->stickyValues = ['_ecn_featuretoggle_ratioTest' => $initialPass];
 
         if ($initialPass) {
             $requiredHits = $this->executeTestIteration($voter) === 100;
@@ -112,28 +112,28 @@ class RatioVoterTest extends TestCase
     /**
      * Callback for session stub
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    public function hasStickyCallback($key): bool
+    public function hasStickyCallback(string $key): bool
     {
-        return array_key_exists($key, $this->stickyValues);
+        return isset($this->stickyValues[$key]);
     }
 
     /**
      * Callback for session stub
      *
-     * @param $key
+     * @param string $key
      *
-     * @return mixed|null
+     * @return bool|null
      */
-    public function getStickyCallback($key)
+    public function getStickyCallback(string $key): bool|null
     {
         return $this->stickyValues[$key] ?? null;
     }
 
-    protected function getRatioVoter($ratio, $sticky = false, $hasSession = true): RatioVoter
+    protected function getRatioVoter(float $ratio, bool $sticky = false, bool $hasSession = true): RatioVoter
     {
         $session = null;
 
@@ -150,23 +150,23 @@ class RatioVoterTest extends TestCase
         $params = ['ratio' => $ratio, 'sticky' => $sticky];
 
         $voter = new RatioVoter($session);
-        $voter->setFeature('ratiotest');
+        $voter->setFeature('ratioTest');
         $voter->setParams($params);
 
         return $voter;
     }
 
     /**
-     * Executes the tests n time returning the number of passes
+     * Executes the Tests n time returning the number of passes
      *
      * @param RatioVoter $ratioVoter
-     * @param int $iterationCount
      *
      * @return int
      */
-    private function executeTestIteration(RatioVoter $ratioVoter, $iterationCount = 100): int
+    private function executeTestIteration(RatioVoter $ratioVoter): int
     {
         $hits = 0;
+        $iterationCount = 100;
 
         for ($i = 1; $i <= $iterationCount; $i++) {
             if ($ratioVoter->pass()) {

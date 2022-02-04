@@ -2,14 +2,11 @@
 
 namespace Ecn\FeatureToggleBundle\Tests\EventListener\Fixture;
 
-use Ecn\FeatureToggleBundle\Configuration\Feature;
-
+use Ecn\FeatureToggleBundle\Attributes\Feature;
 
 class FooControllerFeatureAtInvoke
 {
-    /**
-     * @Feature("feature")
-     */
+    #[Feature(name: 'feature')]
     public function __invoke()
     {
     }

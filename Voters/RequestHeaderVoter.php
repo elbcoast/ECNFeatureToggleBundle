@@ -22,29 +22,18 @@ final class RequestHeaderVoter implements VoterInterface
 {
     use VoterTrait;
 
-    /**
-     * @var array
-     */
-    private $headers = [];
-
-    /**
-     * @var Request|null
-     */
-    private $request;
-
-    /**
-     * @var bool
-     */
-    private $checkHeaderValues = false;
+    private array $headers = [];
+    private ?Request $request = null;
+    private bool $checkHeaderValues = false;
 
     /**
      * {@inheritdoc}
      */
     public function setParams(array $params): void
     {
-        $headers = array_key_exists('headers', $params) ? $params['headers'] : null;
+        $headers = $params['headers'] ?? null;
 
-        $this->checkHeaderValues = $headers ? static::isAssociativeArray($headers) : false;
+        $this->checkHeaderValues = $headers && RequestHeaderVoter::isAssociativeArray($headers);
         $this->headers           = $headers;
     }
 

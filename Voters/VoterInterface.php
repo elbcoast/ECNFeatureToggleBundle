@@ -21,7 +21,6 @@ interface VoterInterface
      * Add additional parameters from the feature definition
      *
      * @param array $params
-     *
      */
     public function setParams(array $params): void;
 
