@@ -10,26 +10,24 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ecn\FeatureToggleBundle\Configuration;
+namespace Ecn\FeatureToggleBundle\Attributes;
 
-use Doctrine\Common\Annotations\Annotation\Required;
-use Doctrine\Common\Annotations\Annotation\Target;
+use Attribute;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * @author Márk Sági-Kazár <mark.sagikazar@gmail.com>
- *
- * @Annotation()
- *
- * @Target({"CLASS", "METHOD"})
  */
+#[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 class Feature
 {
     /**
      * Feature name to be checked.
      *
-     * @var string
-     *
-     * @Required()
+     * @param string $name
      */
-    public $name = "";
+    #[Required]
+    public function __construct(public string $name = "")
+    {
+    }
 }

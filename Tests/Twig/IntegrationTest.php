@@ -9,9 +9,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Ecn\FeatureToggleBundle\Twig;
+namespace Ecn\FeatureToggleBundle\Tests\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
+use Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension;
 use Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter;
 use Ecn\FeatureToggleBundle\Voters\VoterRegistry;
 use Twig\Test\IntegrationTestCase;
@@ -28,6 +29,14 @@ class IntegrationTest extends IntegrationTestCase
 
     /**
      * @dataProvider getTests
+     *
+     * @param string $file
+     * @param string $message
+     * @param string $condition
+     * @param array $templates
+     * @param bool $exception
+     * @param array $outputs
+     * @param string $deprecation
      */
     public function testIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {
@@ -37,6 +46,14 @@ class IntegrationTest extends IntegrationTestCase
     /**
      * @dataProvider getLegacyTests
      * @group legacy
+     *
+     * @param string $file
+     * @param string $message
+     * @param string $condition
+     * @param array $templates
+     * @param bool $exception
+     * @param array $outputs
+     * @param string $deprecation
      */
     public function testLegacyIntegration($file, $message, $condition, $templates, $exception, $outputs, $deprecation = ''): void
     {

@@ -1,6 +1,24 @@
 # Change Log
 
 
+## 3.0.0 - 2022-02-01
+
+### Added
+
+- added support for PHP 8 and 8.1
+- added support for Symfony 5.4 and 6
+- added use of attributes
+
+### Changed
+
+- ControllerFilterEvent to ControllerEvent
+
+### Removed
+
+- removed support for PHP 7 and lower
+- removed support for Symfony 3 and 4
+- removed annotations
+
 ## 2.0.0 - 2019-12-25
 
 ### Added

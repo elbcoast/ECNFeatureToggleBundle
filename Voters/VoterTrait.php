@@ -19,10 +19,7 @@ namespace Ecn\FeatureToggleBundle\Voters;
  */
 trait VoterTrait
 {
-    /**
-     * @var string
-     */
-    private $feature = "";
+    private string $feature = "";
 
     /**
      * {@inheritdoc}

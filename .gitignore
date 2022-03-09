@@ -2,7 +2,5 @@ build/
 vendor/
 composer.lock
 phpunit.xml
-/.idea
 /ECNFeatureToggleBundle.iml
-/.idea/
 /.phpunit.result.cache

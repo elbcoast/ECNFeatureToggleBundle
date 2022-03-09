@@ -30,7 +30,7 @@ class FeatureServiceTest extends TestCase
     {
         // Define a feature
         $features = [
-            'testfeature' => [
+            'testFeature' => [
                 'voter' => 'AlwaysTrueVoter',
                 'params' => []
             ]
@@ -43,8 +43,8 @@ class FeatureServiceTest extends TestCase
         // Create service
         $service = new FeatureService($features, $default, $this->getRegistry());
 
-        $this->assertTrue($service->has('testfeature'));
-        $this->assertFalse($service->has('unknownfeature'));
+        $this->assertTrue($service->has('testFeature'));
+        $this->assertFalse($service->has('unknownFeature'));
     }
 
     /**
@@ -54,7 +54,7 @@ class FeatureServiceTest extends TestCase
     {
         // Define a feature
         $features = [
-            'testfeature' => [
+            'testFeature' => [
                 'voter' => null,
                 'params' => []
             ]
@@ -67,21 +67,21 @@ class FeatureServiceTest extends TestCase
         // Create service
         $service = new FeatureService($features, $default, $this->getRegistry());
 
-        $this->assertTrue($service->has('testfeature'));
-        $this->assertFalse($service->has('unknownfeature'));
+        $this->assertTrue($service->has('testFeature'));
+        $this->assertFalse($service->has('unknownFeature'));
     }
 
     /**
      * Test new feature
      */
-    public function testFeatureUnknownedVoter(): void
+    public function testFeatureUnknownVoter(): void
     {
         $this->expectException(VoterNotFoundException::class);
         $this->expectExceptionMessage('No voter with this alias: "testVoter" is registered');
 
         // Define a feature
         $features = [
-            'testfeature' => [
+            'testFeature' => [
                 'voter' => 'testVoter',
                 'params' => []
             ]
@@ -94,7 +94,7 @@ class FeatureServiceTest extends TestCase
         // Create service
         $service = new FeatureService($features, $default, $this->getRegistry());
 
-        $service->has('testfeature');
+        $service->has('testFeature');
     }
 
     /**

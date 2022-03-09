@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the ECNFeatureToggle package.
@@ -12,6 +13,7 @@
 namespace Ecn\FeatureToggleBundle\Twig;
 
 use Ecn\FeatureToggleBundle\Service\FeatureService;
+use JetBrains\PhpStorm\Pure;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -25,7 +27,7 @@ class FeatureToggleExtension extends AbstractExtension
     /**
      * @var FeatureService
      */
-    protected $featureService;
+    protected FeatureService $featureService;
 
     /**
      * @param FeatureService $featureService
@@ -54,9 +56,9 @@ class FeatureToggleExtension extends AbstractExtension
     }
 
     /**
-     * @return FeatureToggleTokenParser[]
+     * @return array<FeatureToggleTokenParser> []
      */
-    public function getTokenParsers(): array
+    #[Pure] public function getTokenParsers(): array
     {
         return [
             new FeatureToggleTokenParser(),
