@@ -4,3 +4,4 @@ composer.lock
 phpunit.xml
 /ECNFeatureToggleBundle.iml
 /.phpunit.result.cache
+.php-cs-fixer.cache

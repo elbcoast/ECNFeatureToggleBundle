@@ -1,5 +1,11 @@
 # Change Log
 
+## 3.1.0 - 2023-05-12
+
+### Added
+
+- added support for PHP >=8
+- added refactoring tools (php-cs-fixer, rector)
 
 ## 3.0.0 - 2022-02-01
 

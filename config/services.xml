@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <defaults public="false" />
+
+        <!-- FeatureService -->
+        <service id="ecn_featuretoggle" class="Ecn\FeatureToggleBundle\Service\FeatureService">
+            <argument>%features%</argument>
+            <argument>%default%</argument>
+            <argument type="service" id="ecn_featuretoggle.voter_registry"/>
+        </service>
+        <service id="feature" alias="ecn_featuretoggle"/>
+
+
+        <!-- Voter Registry -->
+        <service id="ecn_featuretoggle.voter_registry" class="Ecn\FeatureToggleBundle\Voters\VoterRegistry">
+        </service>
+
+        <!-- AlwaysTrue Voter -->
+        <service id="ecn_featuretoggle.voter_alwaystrue" class="Ecn\FeatureToggleBundle\Voters\AlwaysTrueVoter">
+            <tag name="ecn_featuretoggle.voter" alias="AlwaysTrueVoter"/>
+        </service>
+
+        <!-- AlwaysFalse Voter -->
+        <service id="ecn_featuretoggle.voter_alwaysfalse" class="Ecn\FeatureToggleBundle\Voters\AlwaysFalseVoter">
+            <tag name="ecn_featuretoggle.voter" alias="AlwaysFalseVoter"/>
+        </service>
+
+        <!-- Ratio Voter -->
+        <service id="ecn_featuretoggle.voter_ratio" class="Ecn\FeatureToggleBundle\Voters\RatioVoter">
+            <argument type="service" id="session" on-invalid="null"/>
+            <tag name="ecn_featuretoggle.voter" alias="RatioVoter"/>
+        </service>
+
+        <!-- Schedule Voter -->
+        <service id="ecn_featuretoggle.voter_schedule" class="Ecn\FeatureToggleBundle\Voters\ScheduleVoter">
+            <tag name="ecn_featuretoggle.voter" alias="ScheduleVoter"/>
+        </service>
+
+        <!-- Request Header Voter -->
+        <service id="ecn_featuretoggle.voter_request_header" class="Ecn\FeatureToggleBundle\Voters\RequestHeaderVoter">
+            <call method="setRequest">
+                <argument id="request_stack" type="service"/>
+            </call>
+            <tag name="ecn_featuretoggle.voter" alias="RequestHeaderVoter"/>
+        </service>
+
+        <!-- Twig extension for feature toggle -->
+        <service id="ecn_featuretoggle.twig" class="Ecn\FeatureToggleBundle\Twig\FeatureToggleExtension">
+            <argument type="service" id="ecn_featuretoggle"/>
+            <tag name="twig.extension"/>
+        </service>
+
+        <!-- Controller Annotation listener -->
+        <service id="ecn_featuretoggl.controller.listener" class="Ecn\FeatureToggleBundle\EventListener\ControllerListener">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="annotation_reader" />
+            <argument type="service" id="feature" />
+        </service>
+    </services>
+</container>

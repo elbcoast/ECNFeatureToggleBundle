@@ -12,8 +12,8 @@
 namespace Ecn\FeatureToggleBundle;
 
 use Ecn\FeatureToggleBundle\DependencyInjection\Compiler\VoterCompilerPass;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @author Pierre Groth <pierre@elbcoast.net>
